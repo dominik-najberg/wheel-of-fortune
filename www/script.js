@@ -21,10 +21,50 @@ const colors = [
     '#3498DB', '#9B59B6', '#F39C12', '#E74C3C'
 ];
 
+// Available background styles
+const backgrounds = {
+    rainbow: {
+        background: 'linear-gradient(135deg, #87CEEB 0%, #FFB6C1 50%, #FFFACD 100%)'
+    },
+    sunset: {
+        background: 'linear-gradient(to bottom, #FF6B9D 0%, #FEC368 40%, #FECA57 60%, #48DBF8 100%)'
+    },
+    cotton: {
+        background: 'linear-gradient(135deg, #FFD6E8 0%, #C7E9FB 50%, #FFE5B4 100%)'
+    },
+    forest: {
+        background: 'linear-gradient(135deg, #A8E6CF 0%, #FFEAA7 50%, #FFD3E1 100%)'
+    },
+    underwater: {
+        background: 'linear-gradient(to bottom, #74EBD5 0%, #9FACE6 50%, #74BBE2 100%)'
+    },
+    animated: {
+        background: 'linear-gradient(-45deg, #FFE66D, #FF6B9D, #C7E9FB, #95E1D3)',
+        backgroundSize: '400% 400%',
+        animation: 'gradientShift 10s ease infinite'
+    },
+    bubblegum: {
+        background: 'radial-gradient(ellipse at top left, #FFE5E5 0%, #FFD6A5 50%, #B5E7FF 100%)'
+    }
+};
+
+function applyBackground(key) {
+    const body = document.body;
+    const bg = backgrounds[key];
+    if (!bg) return;
+    body.style.background = bg.background;
+    body.style.backgroundSize = bg.backgroundSize || '';
+    body.style.animation = bg.animation || '';
+}
+
 function startGame() {
     // Get settings
     totalSpins = parseInt(document.getElementById('numSpins').value);
     maxMinutes = parseInt(document.getElementById('maxMinutes').value);
+    localStorage.setItem('numSpins', totalSpins);
+    localStorage.setItem('maxMinutes', maxMinutes);
+    const bgValue = document.getElementById('backgroundSelect').value;
+    localStorage.setItem('background', bgValue);
     currentSpin = 0;
     totalMinutes = 0;
     plusFiveBonus = 0;
@@ -382,6 +422,36 @@ function resetGame() {
     lockPermanent = false;
 }
 
+function loadSavedOptions() {
+    const numSpinsEl = document.getElementById('numSpins');
+    const maxMinutesEl = document.getElementById('maxMinutes');
+    const bgEl = document.getElementById('backgroundSelect');
+
+    const savedNum = localStorage.getItem('numSpins');
+    const savedMax = localStorage.getItem('maxMinutes');
+    const savedBg = localStorage.getItem('background');
+
+    if (savedNum) numSpinsEl.value = savedNum;
+    if (savedMax) maxMinutesEl.value = savedMax;
+    if (savedBg) {
+        bgEl.value = savedBg;
+        applyBackground(savedBg);
+    }
+
+    numSpinsEl.addEventListener('change', () => {
+        localStorage.setItem('numSpins', numSpinsEl.value);
+    });
+
+    maxMinutesEl.addEventListener('change', () => {
+        localStorage.setItem('maxMinutes', maxMinutesEl.value);
+    });
+
+    bgEl.addEventListener('change', () => {
+        localStorage.setItem('background', bgEl.value);
+        applyBackground(bgEl.value);
+    });
+}
+
 // Handle window resize
 window.addEventListener('resize', () => {
     if (document.getElementById('wheelScreen').style.display !== 'none') {
@@ -392,5 +462,5 @@ window.addEventListener('resize', () => {
 
 // Initialize on load
 window.addEventListener('load', () => {
-    // Nothing needed here anymore since canvas is initialized when game starts
+    loadSavedOptions();
 });
