@@ -27,24 +27,24 @@ const backgrounds = {
         background: 'linear-gradient(135deg, #FF0000 0%, #FF7F00 14%, #FFFF00 28%, #00FF00 42%, #0000FF 57%, #4B0082 71%, #9400D3 100%)'
     },
     sunset: {
-        background: 'linear-gradient(to bottom, #FF6B9D 0%, #FEC368 40%, #FECA57 60%, #48DBF8 100%)'
+        background: 'linear-gradient(to bottom, #FF2F8A 0%, #FFA500 40%, #FFD700 60%, #0099FF 100%)'
     },
     cotton: {
-        background: 'linear-gradient(135deg, #FFD6E8 0%, #C7E9FB 50%, #FFE5B4 100%)'
+        background: 'linear-gradient(135deg, #FF95D6 0%, #7FDBFF 50%, #FFC371 100%)'
     },
     forest: {
-        background: 'linear-gradient(135deg, #A8E6CF 0%, #FFEAA7 50%, #FFD3E1 100%)'
+        background: 'linear-gradient(135deg, #00A86B 0%, #2ECC71 50%, #006400 100%)'
     },
     underwater: {
-        background: 'linear-gradient(to bottom, #74EBD5 0%, #9FACE6 50%, #74BBE2 100%)'
+        background: 'linear-gradient(to bottom, #00CED1 0%, #1E90FF 50%, #0077BE 100%)'
     },
     animated: {
-        background: 'linear-gradient(-45deg, #FFE66D, #FF6B9D, #C7E9FB, #95E1D3)',
+        background: 'linear-gradient(-45deg, #FFD700, #FF1493, #5BC0EB, #00BFA6)',
         backgroundSize: '400% 400%',
         animation: 'gradientShift 10s ease infinite'
     },
     bubblegum: {
-        background: 'radial-gradient(ellipse at top left, #FFE5E5 0%, #FFD6A5 50%, #B5E7FF 100%)'
+        background: 'radial-gradient(ellipse at top left, #FF8AD6 0%, #FF55A3 50%, #8BD3FF 100%)'
     }
 };
 
