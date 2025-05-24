@@ -127,7 +127,7 @@ select:hover {
 }
 
 .score-display::after {
-    content: "Tap to finish early";
+    content: "Tap to lock/unlock";
     position: absolute;
     bottom: -25px;
     left: 50%;
