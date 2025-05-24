@@ -10,6 +10,8 @@ let segments = [];
 let holdProgress = 0;
 let isHolding = false;
 let holdInterval = null;
+let minutesLocked = false;
+let lockPermanent = false;
 
 // Colors matching the reference image
 const colors = [
@@ -26,6 +28,8 @@ function startGame() {
     currentSpin = 0;
     totalMinutes = 0;
     plusFiveBonus = 0;
+    minutesLocked = false;
+    lockPermanent = false;
 
     // Generate wheel segments
     generateSegments();
@@ -221,6 +225,10 @@ function endHold() {
 function spin(power) {
     if (isSpinning) return;
 
+    if (minutesLocked) {
+        lockPermanent = true;
+    }
+
     isSpinning = true;
     const spinDuration = 3000 + (power * 2000);
     const spinRotations = 5 + (power * 5);
@@ -279,7 +287,9 @@ function checkResult() {
         }, 500);
     } else {
         // Regular number - this is the new total (not cumulative)
-        totalMinutes = result.value;
+        if (!minutesLocked) {
+            totalMinutes = result.value;
+        }
         currentSpin++;
         updateMinutesDisplay();
         updateSpinCounter();
@@ -325,11 +335,28 @@ function updateSpinCounter() {
 function updateMinutesDisplay() {
     let displayText = `${totalMinutes} Minutes`;
 
+    if (minutesLocked) {
+        displayText += ' \uD83D\uDD12';
+    }
+
     if (plusFiveBonus > 0) {
         displayText += ` (+${plusFiveBonus})`;
     }
 
     document.getElementById('minutesDisplay').textContent = displayText;
+}
+
+function toggleLock() {
+    if (isSpinning) return;
+
+    if (!minutesLocked) {
+        minutesLocked = true;
+        lockPermanent = false;
+    } else if (!lockPermanent) {
+        minutesLocked = false;
+    }
+
+    updateMinutesDisplay();
 }
 
 function endGameEarly() {
@@ -351,6 +378,8 @@ function resetGame() {
     document.getElementById('endScreen').style.display = 'none';
     document.getElementById('setupScreen').style.display = 'block';
     wheelRotation = 0;
+    minutesLocked = false;
+    lockPermanent = false;
 }
 
 // Handle window resize
