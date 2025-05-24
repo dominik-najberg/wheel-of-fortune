@@ -12,6 +12,7 @@ let isHolding = false;
 let holdInterval = null;
 let minutesLocked = false;
 let lockPermanent = false;
+let spinButtonInitialized = false;
 
 // Colors matching the reference image
 const colors = [
@@ -214,6 +215,9 @@ function drawWheel() {
 }
 
 function setupSpinButton() {
+    if (spinButtonInitialized) return;
+    spinButtonInitialized = true;
+
     const spinButton = document.getElementById('spinButton');
 
     // Mouse events
@@ -319,9 +323,11 @@ function checkResult() {
             showAnimatedMessage("Spin Again! You've won one more turn!");
         }, 500);
     } else if (result.type === 'bonus') {
-        // "+5" - add to bonus counter, don't increment spin
-        plusFiveBonus += 5;
-        updateMinutesDisplay();
+        // "+5" - add to bonus counter if not locked
+        if (!minutesLocked) {
+            plusFiveBonus += 5;
+            updateMinutesDisplay();
+        }
         setTimeout(() => {
             showAnimatedMessage("+5 Bonus! Extra 5 minutes added!", true);
         }, 500);
