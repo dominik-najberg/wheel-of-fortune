@@ -98,6 +98,8 @@ select:hover {
 .wheel-screen {
     text-align: center;
     display: none;
+    width: 100%;
+    padding: 20px;
 }
 
 .score-display {
@@ -141,15 +143,24 @@ select:hover {
     opacity: 1;
 }
 
-.wheel-container {
-    position: relative;
+/* Responsive wheel wrapper */
+.wheel-wrapper {
     width: 100%;
     max-width: 400px;
-    height: 400px;
     margin: 0 auto;
 }
 
+.wheel-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* 1:1 Aspect Ratio */
+    height: 0;
+}
+
 #wheelCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
 }
@@ -159,8 +170,10 @@ select:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 140px;
-    height: 140px;
+    width: 35%;
+    height: 35%;
+    max-width: 140px;
+    max-height: 140px;
     background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%);
     border: 8px solid #C0392B;
     border-radius: 50%;
@@ -203,7 +216,7 @@ select:hover {
 .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, #E74C3C 0%, #C0392B 100%);
-    width: 0%;
+    width: 0;
     transition: width 0.1s;
     border-radius: 10px;
 }
@@ -278,17 +291,71 @@ select:hover {
     z-index: 10;
 }
 
-/* Mobile-specific styles */
-@media (max-width: 600px) {
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .setup-screen h1 {
+        font-size: 2rem;
+    }
+
+    .wheel-wrapper {
+        max-width: 90vw;
+    }
+
+    .spin-button {
+        border-width: 6px;
+    }
+
+    .spin-button-text {
+        font-size: 1.2em;
+    }
+
+    .pointer {
+        border-left-width: 20px;
+        border-right-width: 20px;
+        border-top-width: 30px;
+    }
+
     .score-display::after {
         opacity: 1;
         color: rgba(255, 255, 255, 0.6);
     }
 }
 
+@media (max-width: 480px) {
+    .setup-screen {
+        padding: 20px;
+    }
+
+    .setup-screen h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .start-button {
+        padding: 15px 40px;
+        font-size: 1.2em;
+    }
+
+    .spin-button-text {
+        font-size: 1em;
+    }
+
+    .spin-counter {
+        font-size: 1em;
+    }
+
+    .win-message {
+        font-size: 2em;
+    }
+}
+
 /* Animated Message */
 .animated-message {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -299,8 +366,8 @@ select:hover {
 }
 
 .animated-message.show {
-    display: block; /* Show when active */
-    animation: messageAnimation 2.5s ease-out forwards;  /* Changed from 1s to 2.5s */
+    display: block;
+    animation: messageAnimation 2.5s ease-out forwards;
 }
 
 @keyframes messageAnimation {
@@ -308,7 +375,7 @@ select:hover {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0.5);
     }
-    10% {  /* Adjusted timing for 2.5s duration */
+    10% {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1.1);
     }
@@ -318,89 +385,7 @@ select:hover {
     20% {
         transform: translate(-50%, -50%) scale(1);
     }
-    85% {  /* Keep visible longer */
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.9);
-    }
-}
-
-/* Animated Message */
-.animated-message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 100;
-    display: none; /* Hidden by default */
-}
-
-.animated-message.show {
-    display: block; /* Show when active */
-    animation: messageAnimation 1s ease-out forwards;
-}
-
-@keyframes messageAnimation {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.5);
-    }
-    20% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.1);
-    }
-    30% {
-        transform: translate(-50%, -50%) scale(0.95);
-    }
-    40% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-    80% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.9);
-    }
-}
-
-/* Animated Message */
-.animated-message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 100;
-    display: none; /* Hidden by default */
-}
-
-.animated-message.show {
-    display: block; /* Show when active */
-    animation: messageAnimation 3s ease-out forwards;
-}
-
-@keyframes messageAnimation {
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.5);
-    }
-    20% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.1);
-    }
-    30% {
-        transform: translate(-50%, -50%) scale(0.95);
-    }
-    40% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-    80% {
+    85% {
         opacity: 1;
     }
     100% {
@@ -437,7 +422,7 @@ select:hover {
     background: linear-gradient(135deg, #F39C12, #E67E22);
 }
 
-/* Mobile responsive */
+/* Mobile responsive for message */
 @media (max-width: 600px) {
     .message-content {
         font-size: 1.2em;

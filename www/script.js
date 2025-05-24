@@ -3,7 +3,7 @@ let totalSpins = 3;
 let currentSpin = 0;
 let maxMinutes = 25;
 let totalMinutes = 0;
-let plusFiveBonus = 0; // Track accumulated +5 bonuses
+let plusFiveBonus = 0;
 let isSpinning = false;
 let wheelRotation = 0;
 let segments = [];
@@ -38,7 +38,8 @@ function startGame() {
     updateSpinCounter();
     updateMinutesDisplay();
 
-    // Draw wheel
+    // Initialize and draw wheel
+    initializeCanvas();
     drawWheel();
 
     // Setup spin button events
@@ -50,8 +51,8 @@ function generateSegments() {
 
     // Add 14 random minute values in increments of 5
     for (let i = 0; i < 14; i++) {
-        const minValue = Math.ceil(5 / 5) * 5;  // Always start at 5
-        const maxValue = Math.floor(maxMinutes / 5) * 5;  // Round down to nearest 5
+        const minValue = Math.ceil(5 / 5) * 5;
+        const maxValue = Math.floor(maxMinutes / 5) * 5;
         const possibleValues = [];
 
         for (let val = minValue; val <= maxValue; val += 5) {
@@ -71,6 +72,16 @@ function generateSegments() {
 
     // Shuffle segments
     segments.sort(() => Math.random() - 0.5);
+}
+
+function initializeCanvas() {
+    const canvas = document.getElementById('wheelCanvas');
+    const container = canvas.parentElement;
+
+    // Set canvas size to match container
+    const size = container.offsetWidth;
+    canvas.width = size;
+    canvas.height = size;
 }
 
 function drawWheel() {
@@ -114,13 +125,16 @@ function drawWheel() {
         ctx.translate(centerX, centerY);
         ctx.rotate(startAngle + anglePerSegment / 2);
 
-        // Text styling matching reference
+        // Text styling - responsive font size
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = '#FFF8DC';
         ctx.strokeStyle = '#8B4513';
         ctx.lineWidth = 4;
-        ctx.font = 'bold 32px Arial';
+
+        // Responsive font size based on canvas size
+        const fontSize = Math.max(20, Math.min(32, canvas.width / 12));
+        ctx.font = `bold ${fontSize}px Arial`;
 
         // Position text at 75% of radius
         const textRadius = radius * 0.75;
@@ -155,10 +169,8 @@ function drawWheel() {
     }
 }
 
-
 function setupSpinButton() {
     const spinButton = document.getElementById('spinButton');
-    const progressBar = document.getElementById('progressBar');
 
     // Mouse events
     spinButton.addEventListener('mousedown', startHold);
@@ -245,7 +257,6 @@ function checkResult() {
     const anglePerSegment = (Math.PI * 2) / segments.length;
 
     // The pointer is at the top (12 o'clock position)
-    // We need to find which segment is at the top
     let pointerAngle = (3 * Math.PI / 2) - normalizedRotation;
     while (pointerAngle < 0) pointerAngle += Math.PI * 2;
     pointerAngle = pointerAngle % (Math.PI * 2);
@@ -255,7 +266,7 @@ function checkResult() {
 
     // Handle result based on type
     if (result.type === 'tryAgain') {
-        // "Again" - spin doesn't count
+        // "↻" - spin doesn't count
         setTimeout(() => {
             showAnimatedMessage("Spin Again! You've won one more turn!");
         }, 500);
@@ -312,7 +323,6 @@ function updateSpinCounter() {
 }
 
 function updateMinutesDisplay() {
-    const displayMinutes = totalMinutes + plusFiveBonus;
     let displayText = `${totalMinutes} Minutes`;
 
     if (plusFiveBonus > 0) {
@@ -343,9 +353,15 @@ function resetGame() {
     wheelRotation = 0;
 }
 
-// Initialize canvas size
-window.onload = function() {
-    const canvas = document.getElementById('wheelCanvas');
-    canvas.width = 400;
-    canvas.height = 400;
-};
+// Handle window resize
+window.addEventListener('resize', () => {
+    if (document.getElementById('wheelScreen').style.display !== 'none') {
+        initializeCanvas();
+        drawWheel();
+    }
+});
+
+// Initialize on load
+window.addEventListener('load', () => {
+    // Nothing needed here anymore since canvas is initialized when game starts
+});
