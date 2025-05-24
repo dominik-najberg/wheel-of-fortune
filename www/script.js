@@ -24,7 +24,7 @@ const colors = [
 // Available background styles
 const backgrounds = {
     rainbow: {
-        background: 'linear-gradient(135deg, #87CEEB 0%, #FFB6C1 50%, #FFFACD 100%)'
+        background: 'linear-gradient(135deg, #FF0000 0%, #FF7F00 14%, #FFFF00 28%, #00FF00 42%, #0000FF 57%, #4B0082 71%, #9400D3 100%)'
     },
     sunset: {
         background: 'linear-gradient(to bottom, #FF6B9D 0%, #FEC368 40%, #FECA57 60%, #48DBF8 100%)'
