@@ -2,84 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Spin & Win Minutes!</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="container">
-    <!-- Setup Screen -->
-    <div class="setup-screen" id="setupScreen">
-        <h1>🎡 Spin & Win Minutes! 🎡</h1>
+<!-- Setup Screen -->
+<div id="setupScreen" class="container setup-screen">
+    <h1>🎡 Spin & Win! 🎡</h1>
 
-        <div class="dropdown-group">
-            <label for="numSpins">Number of Spins</label>
-            <select id="numSpins">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3" selected>3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-            </select>
-        </div>
-
-        <div class="dropdown-group">
-            <label for="maxMinutes">Max Minutes</label>
-            <select id="maxMinutes">
-                <option value="15">15</option>
-                <option value="20">20</option>
-                <option value="25" selected>25</option>
-                <option value="30">30</option>
-                <option value="35">35</option>
-                <option value="40">40</option>
-                <option value="45">45</option>
-                <option value="50">50</option>
-                <option value="55">55</option>
-            </select>
-        </div>
-
-        <button class="start-button" onclick="startGame()">Start</button>
+    <div class="dropdown-group">
+        <label for="numSpins">Number of Spins</label>
+        <select id="numSpins">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select>
     </div>
 
-    <!-- Wheel Screen -->
-    <div class="wheel-screen" id="wheelScreen">
-        <div class="score-display" id="scoreDisplay" onclick="endGameEarly()">
-            <span id="minutesDisplay">0 Minutes</span>
-        </div>
+    <div class="dropdown-group">
+        <label for="maxMinutes">Max Minutes</label>
+        <select id="maxMinutes">
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25" selected>25</option>
+            <option value="30">30</option>
+            <option value="35">35</option>
+            <option value="40">40</option>
+            <option value="45">45</option>
+            <option value="50">50</option>
+            <option value="55">55</option>
+        </select>
+    </div>
 
+    <button class="start-button" onclick="startGame()">Start</button>
+</div>
+
+<!-- Wheel Screen -->
+<div id="wheelScreen" class="wheel-screen">
+    <div class="score-display" id="minutesDisplay" onclick="endGameEarly()">0 Minutes</div>
+
+    <div class="wheel-wrapper">
         <div class="wheel-container">
-            <div class="pointer"></div>
             <canvas id="wheelCanvas"></canvas>
-            <div class="spin-button" id="spinButton">
-                <div class="spin-button-text">GOOD<br>LUCK</div>
-                <div class="progress-bar" id="progressBar">
-                    <div class="progress-fill" id="progressFill"></div>
+            <div class="pointer"></div>
+            <button id="spinButton" class="spin-button">
+                <span class="spin-button-text">GOOD<br>LUCK</span>
+                <div id="progressBar" class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
                 </div>
-            </div>
-        </div>
-
-        <div class="spin-counter" id="spinCounter">Spin 1 of 3</div>
-
-        <!-- Animated Message -->
-        <div class="animated-message" id="animatedMessage">
-            <div class="message-content">
-                <span class="message-icon">🎉</span>
-                <span class="message-text" id="messageText">Spin Again! You've won one more turn!</span>
-                <span class="message-icon">🎉</span>
-            </div>
+            </button>
         </div>
     </div>
 
-    <!-- End Screen -->
-    <div class="end-screen" id="endScreen">
-        <div class="celebration">🎉🎊🎉</div>
-        <div class="win-message" id="winMessage">You've won 0 minutes!</div>
-        <button class="new-spin-button" onclick="resetGame()">New Spin</button>
+    <div class="spin-counter" id="spinCounter">Spin 1 of 3</div>
+
+    <!-- Animated message for special results -->
+    <div id="animatedMessage" class="animated-message">
+        <div class="message-content">
+            <span class="message-icon">🎉</span>
+            <span id="messageText">Spin Again! You've won one more turn!</span>
+            <span class="message-icon">🎉</span>
+        </div>
     </div>
+</div>
+
+<!-- End Screen -->
+<div id="endScreen" class="container end-screen">
+    <div class="celebration">🎉🎊🎉</div>
+    <h2 class="win-message" id="winMessage">You've won 0 minutes!</h2>
+    <button class="new-spin-button" onclick="resetGame()">New Spin</button>
 </div>
 
 <script src="script.js"></script>
