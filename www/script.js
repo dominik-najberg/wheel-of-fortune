@@ -1,0 +1,351 @@
+// Game state
+let totalSpins = 3;
+let currentSpin = 0;
+let maxMinutes = 25;
+let totalMinutes = 0;
+let plusFiveBonus = 0; // Track accumulated +5 bonuses
+let isSpinning = false;
+let wheelRotation = 0;
+let segments = [];
+let holdProgress = 0;
+let isHolding = false;
+let holdInterval = null;
+
+// Colors matching the reference image
+const colors = [
+    '#E74C3C', '#2ECC71', '#3498DB', '#9B59B6',
+    '#F39C12', '#E74C3C', '#2ECC71', '#3498DB',
+    '#9B59B6', '#F39C12', '#E74C3C', '#2ECC71',
+    '#3498DB', '#9B59B6', '#F39C12', '#E74C3C'
+];
+
+function startGame() {
+    // Get settings
+    totalSpins = parseInt(document.getElementById('numSpins').value);
+    maxMinutes = parseInt(document.getElementById('maxMinutes').value);
+    currentSpin = 0;
+    totalMinutes = 0;
+    plusFiveBonus = 0;
+
+    // Generate wheel segments
+    generateSegments();
+
+    // Switch screens
+    document.getElementById('setupScreen').style.display = 'none';
+    document.getElementById('wheelScreen').style.display = 'block';
+
+    // Update displays
+    updateSpinCounter();
+    updateMinutesDisplay();
+
+    // Draw wheel
+    drawWheel();
+
+    // Setup spin button events
+    setupSpinButton();
+}
+
+function generateSegments() {
+    segments = [];
+
+    // Add 14 random minute values in increments of 5
+    for (let i = 0; i < 14; i++) {
+        const minValue = Math.ceil(5 / 5) * 5;  // Always start at 5
+        const maxValue = Math.floor(maxMinutes / 5) * 5;  // Round down to nearest 5
+        const possibleValues = [];
+
+        for (let val = minValue; val <= maxValue; val += 5) {
+            possibleValues.push(val);
+        }
+
+        const randomValue = possibleValues[Math.floor(Math.random() * possibleValues.length)];
+        segments.push({
+            value: randomValue,
+            type: 'minutes'
+        });
+    }
+
+    // Add special segments
+    segments.push({ value: '↻', type: 'tryAgain' });
+    segments.push({ value: '+5', type: 'bonus' });
+
+    // Shuffle segments
+    segments.sort(() => Math.random() - 0.5);
+}
+
+function drawWheel() {
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) - 20;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw dark background circle
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius + 15, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a3a52';
+    ctx.fill();
+
+    // Draw segments
+    const anglePerSegment = (Math.PI * 2) / segments.length;
+
+    segments.forEach((segment, index) => {
+        const startAngle = index * anglePerSegment + wheelRotation;
+        const endAngle = (index + 1) * anglePerSegment + wheelRotation;
+
+        // Draw segment
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = colors[index % colors.length];
+        ctx.fill();
+
+        // Draw segment border
+        ctx.strokeStyle = '#1a3a52';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        // Draw text
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(startAngle + anglePerSegment / 2);
+
+        // Text styling matching reference
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#FFF8DC';
+        ctx.strokeStyle = '#8B4513';
+        ctx.lineWidth = 4;
+        ctx.font = 'bold 32px Arial';
+
+        // Position text at 75% of radius
+        const textRadius = radius * 0.75;
+        const text = segment.value.toString();
+
+        // Draw text outline first
+        ctx.strokeText(text, textRadius, 0);
+        // Then fill
+        ctx.fillText(text, textRadius, 0);
+
+        ctx.restore();
+    });
+
+    // Draw outer ring
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = '#0a1929';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    // Draw decorative dots around the edge
+    const dotCount = 24;
+    for (let i = 0; i < dotCount; i++) {
+        const angle = (i / dotCount) * Math.PI * 2 + wheelRotation;
+        const dotX = centerX + Math.cos(angle) * (radius + 12);
+        const dotY = centerY + Math.sin(angle) * (radius + 12);
+
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFD700';
+        ctx.fill();
+    }
+}
+
+
+function setupSpinButton() {
+    const spinButton = document.getElementById('spinButton');
+    const progressBar = document.getElementById('progressBar');
+
+    // Mouse events
+    spinButton.addEventListener('mousedown', startHold);
+    spinButton.addEventListener('mouseup', endHold);
+    spinButton.addEventListener('mouseleave', endHold);
+
+    // Touch events
+    spinButton.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startHold();
+    });
+    spinButton.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        endHold();
+    });
+}
+
+function startHold() {
+    if (isSpinning) return;
+
+    isHolding = true;
+    holdProgress = 0;
+    document.getElementById('progressBar').style.opacity = '1';
+
+    holdInterval = setInterval(() => {
+        holdProgress += 2;
+        document.getElementById('progressFill').style.width = holdProgress + '%';
+
+        if (holdProgress >= 100) {
+            endHold();
+        }
+    }, 20);
+}
+
+function endHold() {
+    if (!isHolding || isSpinning) return;
+
+    isHolding = false;
+    clearInterval(holdInterval);
+    document.getElementById('progressBar').style.opacity = '0';
+    document.getElementById('progressFill').style.width = '0%';
+
+    if (holdProgress > 10) {
+        spin(holdProgress / 100);
+    }
+}
+
+function spin(power) {
+    if (isSpinning) return;
+
+    isSpinning = true;
+    const spinDuration = 3000 + (power * 2000);
+    const spinRotations = 5 + (power * 5);
+    const totalRotation = spinRotations * Math.PI * 2 + Math.random() * Math.PI * 2;
+
+    const startTime = Date.now();
+    const startRotation = wheelRotation;
+
+    function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / spinDuration, 1);
+
+        // Easing function for deceleration
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+
+        wheelRotation = startRotation + totalRotation * easeOut;
+        drawWheel();
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            // Spin complete
+            isSpinning = false;
+            checkResult();
+        }
+    }
+
+    animate();
+}
+
+function checkResult() {
+    // Calculate which segment the top pointer is pointing to
+    const normalizedRotation = wheelRotation % (Math.PI * 2);
+    const anglePerSegment = (Math.PI * 2) / segments.length;
+
+    // The pointer is at the top (12 o'clock position)
+    // We need to find which segment is at the top
+    let pointerAngle = (3 * Math.PI / 2) - normalizedRotation;
+    while (pointerAngle < 0) pointerAngle += Math.PI * 2;
+    pointerAngle = pointerAngle % (Math.PI * 2);
+
+    const winningIndex = Math.floor(pointerAngle / anglePerSegment);
+    const result = segments[winningIndex];
+
+    // Handle result based on type
+    if (result.type === 'tryAgain') {
+        // "Again" - spin doesn't count
+        setTimeout(() => {
+            showAnimatedMessage("Spin Again! You've won one more turn!");
+        }, 500);
+    } else if (result.type === 'bonus') {
+        // "+5" - add to bonus counter, don't increment spin
+        plusFiveBonus += 5;
+        updateMinutesDisplay();
+        setTimeout(() => {
+            showAnimatedMessage("+5 Bonus! Extra 5 minutes added!", true);
+        }, 500);
+    } else {
+        // Regular number - this is the new total (not cumulative)
+        totalMinutes = result.value;
+        currentSpin++;
+        updateMinutesDisplay();
+        updateSpinCounter();
+
+        if (currentSpin >= totalSpins) {
+            setTimeout(showEndScreen, 1000);
+        }
+    }
+}
+
+function showAnimatedMessage(text, isBonus = false) {
+    const messageEl = document.getElementById('animatedMessage');
+    const messageTextEl = document.getElementById('messageText');
+
+    // Set the message text
+    messageTextEl.textContent = text;
+
+    // Remove any existing classes
+    messageEl.classList.remove('show', 'bonus');
+
+    // Add appropriate classes
+    if (isBonus) {
+        messageEl.classList.add('bonus');
+    }
+
+    // Trigger reflow to restart animation
+    void messageEl.offsetWidth;
+
+    // Show the message
+    messageEl.classList.add('show');
+
+    // Remove the show class after animation completes
+    setTimeout(() => {
+        messageEl.classList.remove('show');
+    }, 2500);
+}
+
+function updateSpinCounter() {
+    document.getElementById('spinCounter').textContent =
+        `Spin ${Math.min(currentSpin + 1, totalSpins)} of ${totalSpins}`;
+}
+
+function updateMinutesDisplay() {
+    const displayMinutes = totalMinutes + plusFiveBonus;
+    let displayText = `${totalMinutes} Minutes`;
+
+    if (plusFiveBonus > 0) {
+        displayText += ` (+${plusFiveBonus})`;
+    }
+
+    document.getElementById('minutesDisplay').textContent = displayText;
+}
+
+function endGameEarly() {
+    // Only allow ending early if we have at least completed one spin
+    if (currentSpin > 0 && !isSpinning) {
+        showEndScreen();
+    }
+}
+
+function showEndScreen() {
+    const finalMinutes = totalMinutes + plusFiveBonus;
+    document.getElementById('wheelScreen').style.display = 'none';
+    document.getElementById('endScreen').style.display = 'block';
+    document.getElementById('winMessage').textContent =
+        `You've won ${finalMinutes} minutes!`;
+}
+
+function resetGame() {
+    document.getElementById('endScreen').style.display = 'none';
+    document.getElementById('setupScreen').style.display = 'block';
+    wheelRotation = 0;
+}
+
+// Initialize canvas size
+window.onload = function() {
+    const canvas = document.getElementById('wheelCanvas');
+    canvas.width = 400;
+    canvas.height = 400;
+};
