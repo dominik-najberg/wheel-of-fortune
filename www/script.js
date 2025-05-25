@@ -14,12 +14,12 @@ let minutesLocked = false;
 let lockPermanent = false;
 let spinButtonInitialized = false;
 
-// Colors matching the reference image
+// Updated color palette for the wheel segments
 const colors = [
-    '#E74C3C', '#2ECC71', '#3498DB', '#9B59B6',
-    '#F39C12', '#E74C3C', '#2ECC71', '#3498DB',
-    '#9B59B6', '#F39C12', '#E74C3C', '#2ECC71',
-    '#3498DB', '#9B59B6', '#F39C12', '#E74C3C'
+    '#ff595e', '#ffca3a', '#8ac926', '#1982c4',
+    '#6a4c93', '#ff595e', '#ffca3a', '#8ac926',
+    '#1982c4', '#6a4c93', '#ff595e', '#ffca3a',
+    '#8ac926', '#1982c4', '#6a4c93', '#ff595e'
 ];
 
 // Available background styles
@@ -151,11 +151,15 @@ function drawWheel() {
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw dark background circle
+    // Draw dark background circle with shadow
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.4)';
+    ctx.shadowBlur = 15;
     ctx.beginPath();
-    ctx.arc(centerX, centerY, radius + 15, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY, radius + 20, 0, Math.PI * 2);
     ctx.fillStyle = '#1a3a52';
     ctx.fill();
+    ctx.restore();
 
     // Draw segments
     const anglePerSegment = (Math.PI * 2) / segments.length;
@@ -164,17 +168,25 @@ function drawWheel() {
         const startAngle = index * anglePerSegment + wheelRotation;
         const endAngle = (index + 1) * anglePerSegment + wheelRotation;
 
-        // Draw segment
+        // Draw segment with subtle shadow
+        ctx.save();
+        ctx.shadowColor = 'rgba(0,0,0,0.25)';
+        ctx.shadowBlur = 10;
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, startAngle, endAngle);
         ctx.closePath();
         ctx.fillStyle = colors[index % colors.length];
         ctx.fill();
+        ctx.restore();
 
         // Draw segment border
         ctx.strokeStyle = '#1a3a52';
         ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
         ctx.stroke();
 
         // Draw text
@@ -184,44 +196,60 @@ function drawWheel() {
 
         // Text styling - responsive font size
         ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#FFF8DC';
-        ctx.strokeStyle = '#8B4513';
-        ctx.lineWidth = 4;
+        ctx.textBaseline = 'bottom';
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+        ctx.lineWidth = 3;
 
         // Responsive font size based on canvas size
-        const fontSize = Math.max(20, Math.min(32, canvas.width / 12));
+        const fontSize = Math.max(18, Math.min(30, canvas.width / 14));
         ctx.font = `bold ${fontSize}px Arial`;
 
-        // Position text at 75% of radius
-        const textRadius = radius * 0.75;
-        const text = segment.value.toString();
+        // Position text at 80% of radius
+        const textRadius = radius * 0.8;
+        let text = segment.value.toString();
+        if (segment.type === 'tryAgain') {
+            text = 'TRY AGAIN';
+        }
 
-        // Draw text outline first
         ctx.strokeText(text, textRadius, 0);
-        // Then fill
         ctx.fillText(text, textRadius, 0);
 
         ctx.restore();
     });
 
-    // Draw outer ring
+    // Draw outer ring thicker
     ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY, radius + 5, 0, Math.PI * 2);
     ctx.strokeStyle = '#0a1929';
-    ctx.lineWidth = 8;
+    ctx.lineWidth = 20;
     ctx.stroke();
 
+    // Draw circle at center
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius * 0.15, 0, Math.PI * 2);
+    ctx.fillStyle = '#0a1929';
+    ctx.fill();
+
+    // Draw label text on top
+    ctx.save();
+    ctx.translate(centerX, centerY - radius - 25);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${Math.max(14, canvas.width / 25)}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.fillText('POLA  LEON', 0, 0);
+    ctx.restore();
+
     // Draw decorative dots around the edge
-    const dotCount = 24;
+    const dotCount = segments.length;
     for (let i = 0; i < dotCount; i++) {
-        const angle = (i / dotCount) * Math.PI * 2 + wheelRotation;
-        const dotX = centerX + Math.cos(angle) * (radius + 12);
-        const dotY = centerY + Math.sin(angle) * (radius + 12);
+        const angle = (i / dotCount) * Math.PI * 2 + wheelRotation + anglePerSegment / 2;
+        const dotX = centerX + Math.cos(angle) * (radius + 5);
+        const dotY = centerY + Math.sin(angle) * (radius + 5);
 
         ctx.beginPath();
-        ctx.arc(dotX, dotY, 3, 0, Math.PI * 2);
-        ctx.fillStyle = '#FFD700';
+        ctx.arc(dotX, dotY, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
         ctx.fill();
     }
 }

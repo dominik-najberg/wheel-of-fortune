@@ -170,15 +170,15 @@ select:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 35%;
-    height: 35%;
-    max-width: 140px;
-    max-height: 140px;
-    background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%);
-    border: 8px solid #C0392B;
+    width: 38%;
+    height: 38%;
+    max-width: 150px;
+    max-height: 150px;
+    background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f39c12 40%, #d35400 100%);
+    border: 10px solid #6a4c93;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3), inset 0 2px 5px rgba(255,255,255,0.3);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4), inset 0 3px 8px rgba(255,255,255,0.4);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -193,10 +193,10 @@ select:hover {
 }
 
 .spin-button-text {
-    color: #C0392B;
-    font-size: 1.4em;
+    color: #6a4c93;
+    font-size: 1.6em;
     font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+    text-shadow: 1px 1px 3px rgba(255,255,255,0.8);
 }
 
 .progress-bar {
@@ -298,15 +298,15 @@ select:hover {
 
 .pointer {
     position: absolute;
-    top: 0;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 25px solid transparent;
-    border-right: 25px solid transparent;
-    border-top: 35px solid #E74C3C;
-    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.9));
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-top: 45px solid #ffca3a;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.9));
     z-index: 10;
 }
 
