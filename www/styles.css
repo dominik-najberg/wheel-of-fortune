@@ -229,6 +229,25 @@ select:hover {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+/* Button to end the game early */
+.end-game-button {
+    margin-top: 15px;
+    background: linear-gradient(135deg, #2ECC71, #27AE60);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    font-size: 1.6em;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.end-game-button:hover {
+    transform: scale(1.1);
+}
+
 /* End Screen */
 .end-screen {
     background: white;
