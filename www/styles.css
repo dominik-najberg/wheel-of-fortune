@@ -192,6 +192,12 @@ select:hover {
     transform: translate(-50%, -50%) scale(0.95);
 }
 
+.spin-button.locked {
+    pointer-events: none;
+    opacity: 0.6;
+    filter: grayscale(100%);
+}
+
 .spin-button-text {
     color: #C0392B;
     font-size: 1.4em;

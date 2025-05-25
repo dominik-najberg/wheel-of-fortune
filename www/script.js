@@ -13,6 +13,7 @@ let holdInterval = null;
 let minutesLocked = false;
 let lockPermanent = false;
 let spinButtonInitialized = false;
+let spinButtonLocked = false;
 
 // Colors matching the reference image
 const colors = [
@@ -74,6 +75,7 @@ function startGame() {
     plusFiveBonus = 0;
     minutesLocked = false;
     lockPermanent = false;
+    unlockSpinButton();
 
     // Generate wheel segments
     generateSegments();
@@ -248,8 +250,20 @@ function setupSpinButton() {
     });
 }
 
+function lockSpinButton() {
+    spinButtonLocked = true;
+    const btn = document.getElementById('spinButton');
+    if (btn) btn.classList.add('locked');
+}
+
+function unlockSpinButton() {
+    spinButtonLocked = false;
+    const btn = document.getElementById('spinButton');
+    if (btn) btn.classList.remove('locked');
+}
+
 function startHold() {
-    if (isSpinning) return;
+    if (isSpinning || spinButtonLocked) return;
 
     isHolding = true;
     holdProgress = 0;
@@ -279,7 +293,11 @@ function endHold() {
 }
 
 function spin(power) {
-    if (isSpinning) return;
+    if (isSpinning || spinButtonLocked) return;
+
+    if (currentSpin >= totalSpins - 1) {
+        lockSpinButton();
+    }
 
     if (minutesLocked) {
         lockPermanent = true;
@@ -358,6 +376,10 @@ function checkResult() {
         if (currentSpin >= totalSpins) {
             setTimeout(showEndScreen, 1000);
         }
+    }
+
+    if (currentSpin < totalSpins) {
+        unlockSpinButton();
     }
 }
 
@@ -456,6 +478,7 @@ function resetGame() {
     wheelRotation = 0;
     minutesLocked = false;
     lockPermanent = false;
+    unlockSpinButton();
 }
 
 function loadSavedOptions() {
