@@ -127,7 +127,7 @@ select:hover {
 }
 
 .score-display::after {
-    content: "Tap to lock/unlock";
+    content: attr(data-tooltip);
     position: absolute;
     bottom: -25px;
     left: 50%;
