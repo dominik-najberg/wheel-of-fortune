@@ -225,26 +225,35 @@ select:hover {
     border-radius: 10px;
 }
 
-.spin-counter {
+.spin-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
     margin-top: 20px;
+}
+
+.chip {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    display: inline-block;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     font-size: 1.2em;
-    color: white;
     font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    color: #1a3a52;
+}
+
+.spin-counter {
+    margin: 0;
 }
 
 /* Button to end the game early */
 .end-game-button {
-    margin-top: 15px;
     background: linear-gradient(135deg, #2ECC71, #27AE60);
     color: white;
     border: none;
-    width: 60px;
-    height: 60px;
-    font-size: 1.6em;
-    border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     transition: transform 0.2s;
 }
 
