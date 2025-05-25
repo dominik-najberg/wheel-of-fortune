@@ -271,6 +271,7 @@ function spin(power) {
 
     if (minutesLocked) {
         lockPermanent = true;
+        updateMinutesDisplay();
     }
 
     isSpinning = true;
@@ -389,7 +390,22 @@ function updateMinutesDisplay() {
         displayText += ` (+${plusFiveBonus})`;
     }
 
-    document.getElementById('minutesDisplay').textContent = displayText;
+    const minutesEl = document.getElementById('minutesDisplay');
+    minutesEl.textContent = displayText;
+    updateLockTooltip();
+}
+
+function updateLockTooltip() {
+    const minutesEl = document.getElementById('minutesDisplay');
+    let tooltip = '';
+    if (!minutesLocked) {
+        tooltip = 'Tap to lock';
+    } else if (!lockPermanent) {
+        tooltip = 'Tap to unlock';
+    } else {
+        tooltip = 'Score locked';
+    }
+    minutesEl.setAttribute('data-tooltip', tooltip);
 }
 
 function toggleLock() {
