@@ -331,10 +331,12 @@ function checkResult() {
 
     // Handle result based on type
     if (result.type === 'tryAgain') {
-        // "↻" - spin doesn't count
+        // "↻" - award an extra spin without advancing the counter
+        totalSpins++;
         setTimeout(() => {
-            showAnimatedMessage("Spin Again! You've won one more turn!");
+            showAnimatedMessage("You won extra spin!");
         }, 500);
+        updateSpinCounter();
     } else if (result.type === 'bonus') {
         // "+5" - add to bonus counter if not locked
         if (!minutesLocked) {
