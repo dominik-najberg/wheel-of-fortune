@@ -344,7 +344,7 @@ function checkResult() {
             updateMinutesDisplay();
         }
         setTimeout(() => {
-            showAnimatedMessage("+5 Bonus! Extra 5 minutes added!", true);
+            showAnimatedMessage("Extra 5 minutes added!", true);
         }, 500);
     } else {
         // Regular number - this is the new total (not cumulative)
@@ -447,7 +447,7 @@ function showEndScreen() {
     document.getElementById('wheelScreen').style.display = 'none';
     document.getElementById('endScreen').style.display = 'block';
     document.getElementById('winMessage').textContent =
-        `You've won ${finalMinutes} minutes!`;
+        `You win ${finalMinutes} minutes!`;
 }
 
 function resetGame() {
