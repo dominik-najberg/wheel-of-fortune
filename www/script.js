@@ -136,7 +136,7 @@ function initializeCanvas() {
     const container = canvas.parentElement;
 
     // Set canvas size to match container
-    const size = container.offsetWidth;
+    const size= Math.min(400, container.offsetWidth);
     canvas.width = size;
     canvas.height = size;
 }
