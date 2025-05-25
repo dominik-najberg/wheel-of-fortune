@@ -17,6 +17,7 @@ Spin & Win is a simple wheel-of-fortune style game. Spin the wheel to earn minut
 
 * You can open the game in your Web browser (`www/index.html`).
 * You can upload the game to your Web server (only the `www` folder).
+* Yoo can check out the demo: [lucky.najberg.pl](http://lucky.najberg.pl)
 
 ## Running on LAN
 
@@ -24,4 +25,3 @@ The Makefile provides two convenience commands for running the game with Docker 
 
 - `make up` starts a small nginx container that serves the contents of the `www/` folder on [http://localhost:8000](http://localhost:8000).
 - `make down` stops the container when you're done playing.
-
