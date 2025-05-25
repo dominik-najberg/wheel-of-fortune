@@ -459,7 +459,7 @@ function toggleLock() {
 
 function endGameEarly() {
     // Only allow ending early if we have at least completed one spin
-    if (currentSpin > 0 && !isSpinning) {
+    if (!isSpinning) {
         showEndScreen();
     }
 }
