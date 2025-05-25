@@ -24,6 +24,9 @@ const colors = [
 
 // Available background styles
 const backgrounds = {
+    default: {
+        background: 'linear-gradient(135deg, #1a3a52 0%, #0d1f2d 100%)'
+    },
     rainbow: {
         background: 'linear-gradient(135deg, #FF0000 0%, #FF7F00 14%, #FFFF00 28%, #00FF00 42%, #0000FF 57%, #4B0082 71%, #9400D3 100%)'
     },
@@ -406,7 +409,7 @@ function updateMinutesDisplay() {
 
 function updateLockTooltip() {
     const minutesEl = document.getElementById('minutesDisplay');
-    let tooltip = '';
+
     if (!minutesLocked) {
         tooltip = 'Tap to lock';
     } else if (!lockPermanent) {
