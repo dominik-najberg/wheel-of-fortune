@@ -94,6 +94,8 @@ function startGame() {
 function generateSegments() {
     segments = [];
 
+    let hasMax = false;
+
     // Add 14 random minute values in increments of 5
     for (let i = 0; i < 14; i++) {
         const minValue = Math.ceil(5 / 5) * 5;
@@ -105,10 +107,17 @@ function generateSegments() {
         }
 
         const randomValue = possibleValues[Math.floor(Math.random() * possibleValues.length)];
+        if (randomValue === maxValue) {
+            hasMax = true;
+        }
         segments.push({
             value: randomValue,
             type: 'minutes'
         });
+    }
+
+    if (!hasMax) {
+        segments[0].value = Math.floor(maxMinutes / 5) * 5;
     }
 
     // Add special segments
