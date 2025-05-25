@@ -1,6 +1,6 @@
 # Spin & Win
 
-Spin & Win is a simple wheel-of-fortune style game served via a tiny Docker setup. Spin the wheel to earn minutes and collect bonuses!
+Spin & Win is a simple wheel-of-fortune style game. Spin the wheel to earn minutes and collect bonuses!
 
 ![Spin & Win](www/spin-and-win.png)
 
@@ -13,7 +13,12 @@ Spin & Win is a simple wheel-of-fortune style game served via a tiny Docker setu
 5. Tap the minutes display to lock or unlock your score between spins.
 6. After your spins are finished you'll see the total minutes you've won.
 
-## Make Commands
+## Starting the Application
+
+* You can open the game in your Web browser (`www/index.html`).
+* You can upload the game to your Web server (only the `www` folder).
+
+## Running on LAN
 
 The Makefile provides two convenience commands for running the game with Docker Compose:
 
