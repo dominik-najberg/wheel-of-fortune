@@ -338,14 +338,14 @@ function checkResult() {
         }, 500);
         updateSpinCounter();
     } else if (result.type === 'bonus') {
-        // "+5" - add to bonus counter if not locked
+        // "+5" - add to bonus-counter if not locked
         if (!minutesLocked) {
             plusFiveBonus += 5;
             updateMinutesDisplay();
+            setTimeout(() => {
+                showAnimatedMessage("Extra 5 minutes added!", true);
+            }, 500);
         }
-        setTimeout(() => {
-            showAnimatedMessage("Extra 5 minutes added!", true);
-        }, 500);
     } else {
         // Regular number - this is the new total (not cumulative)
         if (!minutesLocked) {
