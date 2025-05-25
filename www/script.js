@@ -469,7 +469,7 @@ function showEndScreen() {
     document.getElementById('wheelScreen').style.display = 'none';
     document.getElementById('endScreen').style.display = 'block';
     document.getElementById('winMessage').textContent =
-        `You win ${finalMinutes} minutes!`;
+        `You won ${finalMinutes} minutes!`;
 }
 
 function resetGame() {
