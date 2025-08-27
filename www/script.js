@@ -433,6 +433,7 @@ function updateMinutesDisplay() {
 
 function updateLockTooltip() {
     const minutesEl = document.getElementById('minutesDisplay');
+    let tooltip;
 
     if (!minutesLocked) {
         tooltip = 'Tap to lock';
@@ -459,7 +460,7 @@ function toggleLock() {
 
 function endGameEarly() {
     // Only allow ending early if we have at least completed one spin
-    if (!isSpinning) {
+    if (!isSpinning && currentSpin > 0) {
         showEndScreen();
     }
 }
