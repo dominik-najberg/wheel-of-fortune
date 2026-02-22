@@ -138,7 +138,7 @@ function initializeCanvas() {
     const container = canvas.parentElement;
 
     // Set canvas size to match container
-    const size= Math.min(400, container.offsetWidth);
+    const size = Math.min(400, container.offsetWidth);
     canvas.width = size;
     canvas.height = size;
 }
@@ -374,7 +374,7 @@ function checkResult() {
         updateSpinCounter();
 
         if (currentSpin >= totalSpins) {
-            setTimeout(showEndScreen, 1000);
+            setTimeout(showGambleScreen, 1000);
         }
     }
 
@@ -464,9 +464,41 @@ function endGameEarly() {
     }
 }
 
-function showEndScreen() {
-    const finalMinutes = totalMinutes + plusFiveBonus;
+function showGambleScreen() {
+    const totalCurrent = totalMinutes + plusFiveBonus;
     document.getElementById('wheelScreen').style.display = 'none';
+    document.getElementById('gambleScreen').style.display = 'block';
+    document.getElementById('gamblePotentialScore').textContent = totalCurrent;
+}
+
+function handleGamble() {
+    const gambleBtn = document.querySelector('.gamble-action-button');
+    gambleBtn.disabled = true;
+    gambleBtn.textContent = '🎲 GAMBLING...';
+
+    setTimeout(() => {
+        const win = Math.random() > 0.5;
+        let finalMinutes = totalMinutes + plusFiveBonus;
+
+        if (win) {
+            finalMinutes = Math.floor(finalMinutes * 1.5);
+            showAnimatedMessage("BIG WIN! +50% Extra!", true);
+        } else {
+            finalMinutes = 10;
+            showAnimatedMessage("Oops! Only 10 min left.");
+        }
+
+        // Delay showing the final screen so the message is visible
+        setTimeout(() => {
+            showEndScreen(finalMinutes);
+        }, 1500);
+    }, 1200);
+}
+
+function showEndScreen(forcedMinutes = null) {
+    const finalMinutes = forcedMinutes !== null ? forcedMinutes : (totalMinutes + plusFiveBonus);
+    document.getElementById('wheelScreen').style.display = 'none';
+    document.getElementById('gambleScreen').style.display = 'none';
     document.getElementById('endScreen').style.display = 'block';
     document.getElementById('winMessage').textContent =
         `You won ${finalMinutes} minutes!`;
@@ -474,7 +506,16 @@ function showEndScreen() {
 
 function resetGame() {
     document.getElementById('endScreen').style.display = 'none';
+    document.getElementById('gambleScreen').style.display = 'none';
     document.getElementById('setupScreen').style.display = 'block';
+
+    // Reset gamble button for next time
+    const gambleBtn = document.querySelector('.gamble-action-button');
+    if (gambleBtn) {
+        gambleBtn.disabled = false;
+        gambleBtn.textContent = 'TRY YOUR LUCK!';
+    }
+
     wheelRotation = 0;
     minutesLocked = false;
     lockPermanent = false;

@@ -1,102 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Spin & Win Minutes!</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-<!-- Setup Screen -->
-<div id="setupScreen" class="container setup-screen">
-    <h1>🎡 Spin & Win! 🎡</h1>
+    <!-- Setup Screen -->
+    <div id="setupScreen" class="container setup-screen">
+        <h1>🎡 Spin & Win! 🎡</h1>
 
-    <div class="dropdown-group">
-        <label for="numSpins">Number of Spins</label>
-        <select id="numSpins">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3" selected>3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-        </select>
+        <div class="dropdown-group">
+            <label for="numSpins">Number of Spins</label>
+            <select id="numSpins">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+            </select>
+        </div>
+
+        <div class="dropdown-group">
+            <label for="maxMinutes">Max Minutes</label>
+            <select id="maxMinutes">
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25" selected>25</option>
+                <option value="30">30</option>
+                <option value="35">35</option>
+                <option value="40">40</option>
+                <option value="45">45</option>
+                <option value="50">50</option>
+                <option value="55">55</option>
+            </select>
+        </div>
+
+        <div class="dropdown-group">
+            <label for="backgroundSelect">Background</label>
+            <select id="backgroundSelect">
+                <option value="default">Default</option>
+                <option value="animated">Animated Gradient (Extra fun!) ✨</option>
+                <option value="bubblegum">Bubblegum Paradise 🎈</option>
+                <option value="cotton">Cotton Candy Clouds 🍭</option>
+                <option value="forest">Magical Forest 🌳</option>
+                <option value="rainbow">Rainbow Sky Gradient 🌈</option>
+                <option value="sunset">Sunset Dreamland 🌅</option>
+                <option value="underwater">Underwater Adventure 🐠</option>
+            </select>
+        </div>
+
+        <button class="start-button" onclick="startGame()">Start</button>
     </div>
 
-    <div class="dropdown-group">
-        <label for="maxMinutes">Max Minutes</label>
-        <select id="maxMinutes">
-            <option value="15">15</option>
-            <option value="20">20</option>
-            <option value="25" selected>25</option>
-            <option value="30">30</option>
-            <option value="35">35</option>
-            <option value="40">40</option>
-            <option value="45">45</option>
-            <option value="50">50</option>
-            <option value="55">55</option>
-        </select>
+    <!-- Wheel Screen -->
+    <div id="wheelScreen" class="wheel-screen">
+        <div class="score-display" id="minutesDisplay" data-tooltip="Tap to lock" onclick="toggleLock()">0 Minutes</div>
+
+        <div class="wheel-wrapper">
+            <div class="wheel-container">
+                <canvas id="wheelCanvas"></canvas>
+                <div class="pointer"></div>
+                <button id="spinButton" class="spin-button">
+                    <span class="spin-button-text">GOOD<br>LUCK</span>
+                    <div id="progressBar" class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div class="spin-info">
+            <div class="spin-counter chip" id="spinCounter">Spin 1 of 3</div>
+            <button class="end-game-button chip" onclick="endGameEarly()">Finish</button>
+        </div>
+
+        <!-- Animated message for special results -->
+        <div id="animatedMessage" class="animated-message">
+            <div class="message-content">
+                <span class="message-icon">🎉</span>
+                <span id="messageText">You won extra spin!</span>
+                <span class="message-icon">🎉</span>
+            </div>
+        </div>
     </div>
 
-    <div class="dropdown-group">
-        <label for="backgroundSelect">Background</label>
-        <select id="backgroundSelect">
-            <option value="default">Default</option>
-            <option value="animated">Animated Gradient (Extra fun!) ✨</option>
-            <option value="bubblegum">Bubblegum Paradise 🎈</option>
-            <option value="cotton">Cotton Candy Clouds 🍭</option>
-            <option value="forest">Magical Forest 🌳</option>
-            <option value="rainbow">Rainbow Sky Gradient 🌈</option>
-            <option value="sunset">Sunset Dreamland 🌅</option>
-            <option value="underwater">Underwater Adventure 🐠</option>
-        </select>
-    </div>
+    <!-- Gamble Screen -->
+    <div id="gambleScreen" class="container gamble-screen" style="display: none;">
+        <h1>Feeling lucky? 🍀</h1>
+        <p class="gamble-info">You've won <span id="gamblePotentialScore">0</span> minutes.</p>
+        <p class="gamble-question">Do you want to gamble for more?</p>
 
-    <button class="start-button" onclick="startGame()">Start</button>
-</div>
-
-<!-- Wheel Screen -->
-<div id="wheelScreen" class="wheel-screen">
-    <div class="score-display" id="minutesDisplay" data-tooltip="Tap to lock" onclick="toggleLock()">0 Minutes</div>
-
-    <div class="wheel-wrapper">
-        <div class="wheel-container">
-            <canvas id="wheelCanvas"></canvas>
-            <div class="pointer"></div>
-            <button id="spinButton" class="spin-button">
-                <span class="spin-button-text">GOOD<br>LUCK</span>
-                <div id="progressBar" class="progress-bar">
-                    <div id="progressFill" class="progress-fill"></div>
+        <div class="gamble-card">
+            <div class="gamble-outcomes">
+                <div class="outcome win">
+                    <span class="outcome-label">Half More</span>
+                    <span class="outcome-value">+50%</span>
                 </div>
-            </button>
+                <div class="outcome-vs">VS</div>
+                <div class="outcome lose">
+                    <span class="outcome-label">10 min only</span>
+                    <span class="outcome-value">The Risk</span>
+                </div>
+            </div>
+            <button class="gamble-action-button" onclick="handleGamble()">TRY YOUR LUCK!</button>
         </div>
+
+        <button class="skip-gamble-button" onclick="showEndScreen()">No thanks, I'll keep my win</button>
     </div>
 
-    <div class="spin-info">
-        <div class="spin-counter chip" id="spinCounter">Spin 1 of 3</div>
-        <button class="end-game-button chip" onclick="endGameEarly()">Finish</button>
+    <!-- End Screen -->
+    <div id="endScreen" class="container end-screen">
+        <div class="celebration"><span>🎉</span><span>🎊</span><span>🎉</span></div>
+        <h2 class="win-message" id="winMessage">You won 0 minutes!</h2>
+        <button class="new-spin-button" onclick="resetGame()">New Spin</button>
     </div>
 
-    <!-- Animated message for special results -->
-    <div id="animatedMessage" class="animated-message">
-        <div class="message-content">
-            <span class="message-icon">🎉</span>
-            <span id="messageText">You won extra spin!</span>
-            <span class="message-icon">🎉</span>
-        </div>
-    </div>
-</div>
-
-<!-- End Screen -->
-<div id="endScreen" class="container end-screen">
-    <div class="celebration"><span>🎉</span><span>🎊</span><span>🎉</span></div>
-    <h2 class="win-message" id="winMessage">You won 0 minutes!</h2>
-    <button class="new-spin-button" onclick="resetGame()">New Spin</button>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
