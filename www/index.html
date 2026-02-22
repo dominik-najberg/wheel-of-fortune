@@ -98,7 +98,7 @@
         <div class="gamble-card">
             <div class="gamble-outcomes">
                 <div class="outcome win">
-                    <span class="outcome-label">Half More</span>
+                    <span class="outcome-label" id="gambleWinLabel">Half More</span>
                     <span class="outcome-value">+50%</span>
                 </div>
                 <div class="outcome-vs">VS</div>
@@ -117,14 +117,54 @@
                     <span class="outcome-value"><span id="keepTotalMinutes">0</span> min</span>
                 </div>
             </div>
-            <button class="skip-gamble-button" onclick="showEndScreen()">🛡️ Keep My Time!</button>
+            <button class="skip-gamble-button" onclick="handleSafeGamble()">🛡️ Keep My Time!</button>
+        </div>
+    </div>
+
+    <!-- Gamble Result Screen -->
+    <div id="gambleResultScreen" class="container gamble-screen" style="display: none;">
+        <!-- Win Panel -->
+        <div id="gambleWinPanel" class="gamble-card" style="display: none;">
+            <div class="celebration"><span>🎉</span><span>🎊</span><span>🎉</span></div>
+            <h2 class="win-message" style="margin-bottom: 5px;">BIG WIN!</h2>
+            <div class="gamble-outcomes">
+                <div class="outcome win" style="margin-top: 15px;">
+                    <span class="outcome-value" id="gambleWinAmount">+0 min</span>
+                    <span class="outcome-label">Extra Time Added!</span>
+                </div>
+            </div>
+            <button class="gamble-action-button" onclick="continueFromGamble()">Awesome! Let's Go!</button>
+        </div>
+
+        <!-- Lose Panel -->
+        <div id="gambleLosePanel" class="gamble-card" style="display: none;">
+            <div class="celebration" style="font-size: 4em;"><span>💥</span></div>
+            <h2 class="win-message" style="color: #E74C3C; margin-bottom: 5px;">Ouch!</h2>
+            <div class="gamble-outcomes">
+                <div class="outcome lose" style="margin-top: 15px;">
+                    <span class="outcome-label">Only 10 minutes left</span>
+                </div>
+            </div>
+            <button class="skip-gamble-button" onclick="continueFromGamble()">Accept my fate</button>
+        </div>
+
+        <!-- Safe Panel -->
+        <div id="gambleSafePanel" class="gamble-card" style="display: none;">
+            <div><img src="cat.png" alt="Happy Cat Badge" style="max-width: 150px; margin-bottom: 20px;"></div>
+            <div class="gamble-outcomes">
+                <div class="outcome safe" style="margin-top: 15px;">
+                    <span class="outcome-label">Time secured:</span>
+                    <span class="outcome-value" style="color: #2980b9;"><span id="safePanelMinutes">0</span> min</span>
+                </div>
+            </div>
+            <button class="skip-gamble-button" onclick="continueFromGamble()">Continue!</button>
         </div>
     </div>
 
     <!-- End Screen -->
     <div id="endScreen" class="container end-screen">
         <div class="celebration"><span>🎉</span><span>🎊</span><span>🎉</span></div>
-        <h2 class="win-message" id="winMessage">You won!</h2>
+        <h2 class="win-message" id="winMessage">Winning!</h2>
         <div class="summary-breakdown">
             <div class="summary-item">
                 <span class="summary-label">Regular Minutes:</span>
