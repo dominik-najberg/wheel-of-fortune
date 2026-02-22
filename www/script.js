@@ -520,6 +520,20 @@ function handleGamble() {
     }, 1200);
 }
 
+function handleSafeGamble() {
+    let finalMinutes = totalMinutes + plusFiveBonus;
+    finalGambleMinutes = finalMinutes;
+
+    document.getElementById('gambleScreen').style.display = 'none';
+    document.getElementById('gambleResultScreen').style.display = 'block';
+
+    document.getElementById('gambleWinPanel').style.display = 'none';
+    document.getElementById('gambleLosePanel').style.display = 'none';
+
+    document.getElementById('safePanelMinutes').textContent = finalMinutes;
+    document.getElementById('gambleSafePanel').style.display = 'block';
+}
+
 function continueFromGamble() {
     document.getElementById('gambleResultScreen').style.display = 'none';
     showEndScreen(finalGambleMinutes);
@@ -574,6 +588,7 @@ function resetGame() {
     document.getElementById('gambleResultScreen').style.display = 'none';
     document.getElementById('gambleWinPanel').style.display = 'none';
     document.getElementById('gambleLosePanel').style.display = 'none';
+    document.getElementById('gambleSafePanel').style.display = 'none';
     document.getElementById('setupScreen').style.display = 'block';
 
     // Clear summary values to prevent stale data on next End Screen

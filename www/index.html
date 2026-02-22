@@ -117,7 +117,7 @@
                     <span class="outcome-value"><span id="keepTotalMinutes">0</span> min</span>
                 </div>
             </div>
-            <button class="skip-gamble-button" onclick="showEndScreen()">🛡️ Keep My Time!</button>
+            <button class="skip-gamble-button" onclick="handleSafeGamble()">🛡️ Keep My Time!</button>
         </div>
     </div>
 
@@ -146,6 +146,22 @@
                 </div>
             </div>
             <button class="skip-gamble-button" onclick="continueFromGamble()">Accept my fate</button>
+        </div>
+
+        <!-- Safe Panel -->
+        <div id="gambleSafePanel" class="gamble-card" style="display: none;">
+            <div><img src="cat.png" alt="Happy Cat"
+                    style="max-width: 150px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px;">
+            </div>
+            <h2 class="win-message" style="color: #2980b9; margin-bottom: 5px; font-size: 2em;">No Risk. Keeping It Safe
+            </h2>
+            <div class="gamble-outcomes">
+                <div class="outcome safe" style="margin-top: 15px;">
+                    <span class="outcome-label">Time secured:</span>
+                    <span class="outcome-value" style="color: #2980b9;"><span id="safePanelMinutes">0</span> min</span>
+                </div>
+            </div>
+            <button class="skip-gamble-button" onclick="continueFromGamble()">Continue!</button>
         </div>
     </div>
 
