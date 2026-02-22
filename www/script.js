@@ -470,6 +470,12 @@ function showGambleScreen() {
     document.getElementById('wheelScreen').style.display = 'none';
     document.getElementById('gambleScreen').style.display = 'block';
 
+    let extraTime = Math.round((totalCurrent * 0.5) / 5) * 5;
+    const gambleWinLabel = document.getElementById('gambleWinLabel');
+    if (gambleWinLabel) {
+        gambleWinLabel.textContent = `+${extraTime} min`;
+    }
+
     // Check if the element exists in case the original header text still exists
     const gamblePotentialScoreElement = document.getElementById('gamblePotentialScore');
     if (gamblePotentialScoreElement) {
@@ -489,8 +495,9 @@ function handleGamble() {
         let finalMinutes = totalMinutes + plusFiveBonus;
 
         if (win) {
-            finalMinutes = Math.floor(finalMinutes * 1.5);
-            showAnimatedMessage("BIG WIN! +50% Extra!", true);
+            let extraTime = Math.round((finalMinutes * 0.5) / 5) * 5;
+            finalMinutes = finalMinutes + extraTime;
+            showAnimatedMessage(`BIG WIN! +${extraTime} min Extra!`, true);
         } else {
             finalMinutes = 10;
             showAnimatedMessage("Oops! Only 10 min left.");
