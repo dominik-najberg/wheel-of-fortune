@@ -119,7 +119,25 @@
     <!-- End Screen -->
     <div id="endScreen" class="container end-screen">
         <div class="celebration"><span>🎉</span><span>🎊</span><span>🎉</span></div>
-        <h2 class="win-message" id="winMessage">You won 0 minutes!</h2>
+        <h2 class="win-message" id="winMessage">You won!</h2>
+        <div class="summary-breakdown">
+            <div class="summary-item">
+                <span class="summary-label">Regular Minutes:</span>
+                <span class="summary-value" id="summaryRegular">0</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Plus Fives:</span>
+                <span class="summary-value" id="summaryPlusFives">0</span>
+            </div>
+            <div class="summary-item" id="luckyMinutesItem">
+                <span class="summary-label">Lucky Minutes:</span>
+                <span class="summary-value" id="summaryLucky">0</span>
+            </div>
+            <div class="summary-total">
+                <span class="summary-label">Total Minutes:</span>
+                <span class="summary-value" id="summaryTotal">0</span>
+            </div>
+        </div>
         <button class="new-spin-button" onclick="resetGame()">New Spin</button>
     </div>
 

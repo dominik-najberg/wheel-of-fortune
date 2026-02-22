@@ -497,17 +497,44 @@ function handleGamble() {
 
 function showEndScreen(forcedMinutes = null) {
     const finalMinutes = forcedMinutes !== null ? forcedMinutes : (totalMinutes + plusFiveBonus);
+
+    // Calculate Breakdown
+    const regularMinutes = totalMinutes;
+    const plusFives = plusFiveBonus;
+    const luckyMinutes = finalMinutes - (regularMinutes + plusFives);
+
     document.getElementById('wheelScreen').style.display = 'none';
     document.getElementById('gambleScreen').style.display = 'none';
     document.getElementById('endScreen').style.display = 'block';
-    document.getElementById('winMessage').textContent =
-        `You won ${finalMinutes} minutes!`;
+
+    // Update summary values
+    document.getElementById('summaryRegular').textContent = regularMinutes;
+    document.getElementById('summaryPlusFives').textContent = plusFives;
+    document.getElementById('summaryLucky').textContent = luckyMinutes;
+    document.getElementById('summaryTotal').textContent = finalMinutes;
+
+    // Optional: Only show lucky minutes if user gambled
+    const luckyItem = document.getElementById('luckyMinutesItem');
+    if (luckyItem) {
+        if (forcedMinutes !== null) {
+            luckyItem.style.display = 'flex';
+        } else {
+            luckyItem.style.display = 'none';
+        }
+    }
+
 }
 
 function resetGame() {
     document.getElementById('endScreen').style.display = 'none';
     document.getElementById('gambleScreen').style.display = 'none';
     document.getElementById('setupScreen').style.display = 'block';
+
+    // Clear summary values to prevent stale data on next End Screen
+    document.getElementById('summaryRegular').textContent = '0';
+    document.getElementById('summaryPlusFives').textContent = '0';
+    document.getElementById('summaryLucky').textContent = '0';
+    document.getElementById('summaryTotal').textContent = '0';
 
     // Reset gamble button for next time
     const gambleBtn = document.querySelector('.gamble-action-button');
