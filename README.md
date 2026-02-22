@@ -9,9 +9,10 @@ Spin & Win is a simple wheel-of-fortune style game. Spin the wheel to earn minut
 1. Select the number of spins, the maximum minutes on the wheel and a background on the setup screen.
 2. Press **Start** to move to the wheel.
 3. Hold the **GOOD LUCK** button to build spin power and release to spin.
-4. The wheel can land on minute values, extra spins (`\u21bb`) or a `+5` bonus.
+4. The wheel can land on minute values, extra spins (`↻`) or a `+5` bonus.
 5. Tap the minutes display to lock or unlock your score between spins.
-6. After your spins are finished you'll see the total minutes you've won.
+6. After your spins are finished, you'll reach the Gamble Screen where you can choose to keep your won minutes securely or risk them for a chance to win 50% more.
+7. Finally, you'll see the End Screen with a summary of your total minutes won and a breakdown of your bonuses.
 
 ## Starting the Application
 
