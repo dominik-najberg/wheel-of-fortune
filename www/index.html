@@ -110,7 +110,15 @@
             <button class="gamble-action-button" onclick="handleGamble()">TRY YOUR LUCK!</button>
         </div>
 
-        <button class="skip-gamble-button" onclick="showEndScreen()">🛡️ Keep My Time!</button>
+        <div class="gamble-card safe-card">
+            <div class="gamble-outcomes">
+                <div class="outcome safe">
+                    <span class="outcome-label">No risk. You keep all:</span>
+                    <span class="outcome-value"><span id="keepTotalMinutes">0</span> min</span>
+                </div>
+            </div>
+            <button class="skip-gamble-button" onclick="showEndScreen()">🛡️ Keep My Time!</button>
+        </div>
     </div>
 
     <!-- End Screen -->

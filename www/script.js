@@ -468,7 +468,14 @@ function showGambleScreen() {
     const totalCurrent = totalMinutes + plusFiveBonus;
     document.getElementById('wheelScreen').style.display = 'none';
     document.getElementById('gambleScreen').style.display = 'block';
-    document.getElementById('gamblePotentialScore').textContent = totalCurrent;
+
+    // Check if the element exists in case the original header text still exists
+    const gamblePotentialScoreElement = document.getElementById('gamblePotentialScore');
+    if (gamblePotentialScoreElement) {
+        gamblePotentialScoreElement.textContent = totalCurrent;
+    }
+
+    document.getElementById('keepTotalMinutes').textContent = totalCurrent;
 }
 
 function handleGamble() {

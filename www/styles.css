@@ -370,6 +370,20 @@ select:hover {
     transform: translateY(-1px);
 }
 
+.safe-card {
+    border: 2px dashed #3498db;
+    background: #f0f8ff;
+}
+
+.outcome.safe .outcome-value {
+    color: #2980b9;
+}
+
+.outcome-icon {
+    font-size: 2.5em;
+    margin-bottom: 5px;
+}
+
 .skip-gamble-button {
     background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
