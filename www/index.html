@@ -121,6 +121,35 @@
         </div>
     </div>
 
+    <!-- Gamble Result Screen -->
+    <div id="gambleResultScreen" class="container gamble-screen" style="display: none;">
+        <!-- Win Panel -->
+        <div id="gambleWinPanel" class="gamble-card" style="display: none;">
+            <div class="celebration"><span>🎉</span><span>🎊</span><span>🎉</span></div>
+            <h2 class="win-message" style="margin-bottom: 5px;">BIG WIN!</h2>
+            <div class="gamble-outcomes">
+                <div class="outcome win" style="margin-top: 15px;">
+                    <span class="outcome-value" id="gambleWinAmount">+0 min</span>
+                    <span class="outcome-label">Extra Time Added!</span>
+                </div>
+            </div>
+            <button class="gamble-action-button" onclick="continueFromGamble()">Awesome! Let's Go!</button>
+        </div>
+
+        <!-- Lose Panel -->
+        <div id="gambleLosePanel" class="gamble-card" style="display: none;">
+            <div class="celebration" style="font-size: 4em;"><span>💥</span></div>
+            <h2 class="win-message" style="color: #E74C3C; margin-bottom: 5px;">Ouch!</h2>
+            <div class="gamble-outcomes">
+                <div class="outcome lose" style="margin-top: 15px;">
+                    <span class="outcome-value">10 min</span>
+                    <span class="outcome-label">Only 10 minutes left</span>
+                </div>
+            </div>
+            <button class="skip-gamble-button" onclick="continueFromGamble()">Accept my fate</button>
+        </div>
+    </div>
+
     <!-- End Screen -->
     <div id="endScreen" class="container end-screen">
         <div class="celebration"><span>🎉</span><span>🎊</span><span>🎉</span></div>

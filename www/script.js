@@ -14,6 +14,7 @@ let minutesLocked = false;
 let lockPermanent = false;
 let spinButtonInitialized = false;
 let spinButtonLocked = false;
+let finalGambleMinutes = 0;
 
 // Colors matching the reference image
 const colors = [
@@ -82,6 +83,9 @@ function startGame() {
 
     // Switch screens
     document.getElementById('setupScreen').style.display = 'none';
+    document.getElementById('endScreen').style.display = 'none';
+    document.getElementById('gambleScreen').style.display = 'none';
+    document.getElementById('gambleResultScreen').style.display = 'none';
     document.getElementById('wheelScreen').style.display = 'block';
 
     // Update displays
@@ -494,20 +498,31 @@ function handleGamble() {
         const win = Math.random() > 0.5;
         let finalMinutes = totalMinutes + plusFiveBonus;
 
+        document.getElementById('gambleScreen').style.display = 'none';
+        document.getElementById('gambleResultScreen').style.display = 'block';
+
         if (win) {
             let extraTime = Math.round((finalMinutes * 0.5) / 5) * 5;
             finalMinutes = finalMinutes + extraTime;
-            showAnimatedMessage(`BIG WIN! +${extraTime} min Extra!`, true);
+
+            document.getElementById('gambleWinAmount').textContent = `+${extraTime} min`;
+            document.getElementById('gambleWinPanel').style.display = 'block';
+            document.getElementById('gambleLosePanel').style.display = 'none';
         } else {
             finalMinutes = 10;
-            showAnimatedMessage("Oops! Only 10 min left.");
+
+            document.getElementById('gambleWinPanel').style.display = 'none';
+            document.getElementById('gambleLosePanel').style.display = 'block';
         }
 
-        // Delay showing the final screen so the message is visible
-        setTimeout(() => {
-            showEndScreen(finalMinutes);
-        }, 1500);
+        finalGambleMinutes = finalMinutes;
+
     }, 1200);
+}
+
+function continueFromGamble() {
+    document.getElementById('gambleResultScreen').style.display = 'none';
+    showEndScreen(finalGambleMinutes);
 }
 
 function showEndScreen(forcedMinutes = null) {
@@ -520,6 +535,7 @@ function showEndScreen(forcedMinutes = null) {
 
     document.getElementById('wheelScreen').style.display = 'none';
     document.getElementById('gambleScreen').style.display = 'none';
+    document.getElementById('gambleResultScreen').style.display = 'none';
     document.getElementById('endScreen').style.display = 'block';
 
     // Update summary values
@@ -555,6 +571,9 @@ function showEndScreen(forcedMinutes = null) {
 function resetGame() {
     document.getElementById('endScreen').style.display = 'none';
     document.getElementById('gambleScreen').style.display = 'none';
+    document.getElementById('gambleResultScreen').style.display = 'none';
+    document.getElementById('gambleWinPanel').style.display = 'none';
+    document.getElementById('gambleLosePanel').style.display = 'none';
     document.getElementById('setupScreen').style.display = 'block';
 
     // Clear summary values to prevent stale data on next End Screen
