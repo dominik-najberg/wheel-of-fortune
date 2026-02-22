@@ -510,7 +510,19 @@ function showEndScreen(forcedMinutes = null) {
     // Update summary values
     document.getElementById('summaryRegular').textContent = regularMinutes;
     document.getElementById('summaryPlusFives').textContent = plusFives;
-    document.getElementById('summaryLucky').textContent = luckyMinutes;
+
+    const summaryLuckyEl = document.getElementById('summaryLucky');
+    const summaryLuckyLabelEl = document.getElementById('summaryLuckyLabel');
+    summaryLuckyEl.textContent = luckyMinutes;
+
+    if (luckyMinutes < 0) {
+        summaryLuckyLabelEl.textContent = 'Unlucky Minutes:';
+        summaryLuckyEl.classList.add('unlucky');
+    } else {
+        summaryLuckyLabelEl.textContent = 'Lucky Minutes:';
+        summaryLuckyEl.classList.remove('unlucky');
+    }
+
     document.getElementById('summaryTotal').textContent = finalMinutes;
 
     // Optional: Only show lucky minutes if user gambled
@@ -533,7 +545,12 @@ function resetGame() {
     // Clear summary values to prevent stale data on next End Screen
     document.getElementById('summaryRegular').textContent = '0';
     document.getElementById('summaryPlusFives').textContent = '0';
-    document.getElementById('summaryLucky').textContent = '0';
+
+    const summaryLuckyEl = document.getElementById('summaryLucky');
+    summaryLuckyEl.textContent = '0';
+    summaryLuckyEl.classList.remove('unlucky');
+    document.getElementById('summaryLuckyLabel').textContent = 'Lucky Minutes:';
+
     document.getElementById('summaryTotal').textContent = '0';
 
     // Reset gamble button for next time

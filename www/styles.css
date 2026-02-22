@@ -502,6 +502,10 @@ select:hover {
     color: #2ECC71;
 }
 
+.summary-value.unlucky {
+    color: #E74C3C;
+}
+
 .summary-total .summary-value {
     color: #E67E22;
 }
