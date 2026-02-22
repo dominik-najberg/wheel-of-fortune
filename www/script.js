@@ -15,6 +15,7 @@ let lockPermanent = false;
 let spinButtonInitialized = false;
 let spinButtonLocked = false;
 let finalGambleMinutes = 0;
+let gambleChoice = 'none';
 
 // Colors matching the reference image
 const colors = [
@@ -76,6 +77,7 @@ function startGame() {
     plusFiveBonus = 0;
     minutesLocked = false;
     lockPermanent = false;
+    gambleChoice = 'none';
     unlockSpinButton();
 
     // Generate wheel segments
@@ -490,6 +492,7 @@ function showGambleScreen() {
 }
 
 function handleGamble() {
+    gambleChoice = 'gamble';
     const gambleBtn = document.querySelector('.gamble-action-button');
     gambleBtn.disabled = true;
     gambleBtn.textContent = '🎲 GAMBLING...';
@@ -521,6 +524,7 @@ function handleGamble() {
 }
 
 function handleSafeGamble() {
+    gambleChoice = 'safe';
     let finalMinutes = totalMinutes + plusFiveBonus;
     finalGambleMinutes = finalMinutes;
 
@@ -558,14 +562,24 @@ function showEndScreen(forcedMinutes = null) {
 
     const summaryLuckyEl = document.getElementById('summaryLucky');
     const summaryLuckyLabelEl = document.getElementById('summaryLuckyLabel');
-    summaryLuckyEl.textContent = luckyMinutes;
 
-    if (luckyMinutes < 0) {
-        summaryLuckyLabelEl.textContent = 'Unlucky Minutes:';
-        summaryLuckyEl.classList.add('unlucky');
-    } else {
-        summaryLuckyLabelEl.textContent = 'Lucky Minutes:';
+    if (gambleChoice === 'safe') {
+        summaryLuckyLabelEl.textContent = 'Safe Choice:';
+        summaryLuckyEl.textContent = '🥳';
         summaryLuckyEl.classList.remove('unlucky');
+        summaryLuckyEl.style.color = '#2980b9'; // Optional: Use safe color
+    } else {
+        summaryLuckyEl.textContent = luckyMinutes;
+        // Reset color if set
+        summaryLuckyEl.style.color = '';
+
+        if (luckyMinutes < 0) {
+            summaryLuckyLabelEl.textContent = 'Unlucky Minutes:';
+            summaryLuckyEl.classList.add('unlucky');
+        } else {
+            summaryLuckyLabelEl.textContent = 'Lucky Minutes:';
+            summaryLuckyEl.classList.remove('unlucky');
+        }
     }
 
     document.getElementById('summaryTotal').textContent = finalMinutes;
@@ -597,6 +611,7 @@ function resetGame() {
 
     const summaryLuckyEl = document.getElementById('summaryLucky');
     summaryLuckyEl.textContent = '0';
+    summaryLuckyEl.style.color = '';
     summaryLuckyEl.classList.remove('unlucky');
     document.getElementById('summaryLuckyLabel').textContent = 'Lucky Minutes:';
 
