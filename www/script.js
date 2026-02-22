@@ -138,7 +138,7 @@ function initializeCanvas() {
     const container = canvas.parentElement;
 
     // Set canvas size to match container
-    const size= Math.min(400, container.offsetWidth);
+    const size = Math.min(400, container.offsetWidth);
     canvas.width = size;
     canvas.height = size;
 }
@@ -374,7 +374,7 @@ function checkResult() {
         updateSpinCounter();
 
         if (currentSpin >= totalSpins) {
-            setTimeout(showEndScreen, 1000);
+            setTimeout(showGambleScreen, 1000);
         }
     }
 
@@ -465,17 +465,109 @@ function endGameEarly() {
     }
 }
 
-function showEndScreen() {
-    const finalMinutes = totalMinutes + plusFiveBonus;
+function showGambleScreen() {
+    const totalCurrent = totalMinutes + plusFiveBonus;
     document.getElementById('wheelScreen').style.display = 'none';
+    document.getElementById('gambleScreen').style.display = 'block';
+
+    // Check if the element exists in case the original header text still exists
+    const gamblePotentialScoreElement = document.getElementById('gamblePotentialScore');
+    if (gamblePotentialScoreElement) {
+        gamblePotentialScoreElement.textContent = totalCurrent;
+    }
+
+    document.getElementById('keepTotalMinutes').textContent = totalCurrent;
+}
+
+function handleGamble() {
+    const gambleBtn = document.querySelector('.gamble-action-button');
+    gambleBtn.disabled = true;
+    gambleBtn.textContent = '🎲 GAMBLING...';
+
+    setTimeout(() => {
+        const win = Math.random() > 0.5;
+        let finalMinutes = totalMinutes + plusFiveBonus;
+
+        if (win) {
+            finalMinutes = Math.floor(finalMinutes * 1.5);
+            showAnimatedMessage("BIG WIN! +50% Extra!", true);
+        } else {
+            finalMinutes = 10;
+            showAnimatedMessage("Oops! Only 10 min left.");
+        }
+
+        // Delay showing the final screen so the message is visible
+        setTimeout(() => {
+            showEndScreen(finalMinutes);
+        }, 1500);
+    }, 1200);
+}
+
+function showEndScreen(forcedMinutes = null) {
+    const finalMinutes = forcedMinutes !== null ? forcedMinutes : (totalMinutes + plusFiveBonus);
+
+    // Calculate Breakdown
+    const regularMinutes = totalMinutes;
+    const plusFives = plusFiveBonus;
+    const luckyMinutes = finalMinutes - (regularMinutes + plusFives);
+
+    document.getElementById('wheelScreen').style.display = 'none';
+    document.getElementById('gambleScreen').style.display = 'none';
     document.getElementById('endScreen').style.display = 'block';
-    document.getElementById('winMessage').textContent =
-        `You win ${finalMinutes} minutes!`;
+
+    // Update summary values
+    document.getElementById('summaryRegular').textContent = regularMinutes;
+    document.getElementById('summaryPlusFives').textContent = plusFives;
+
+    const summaryLuckyEl = document.getElementById('summaryLucky');
+    const summaryLuckyLabelEl = document.getElementById('summaryLuckyLabel');
+    summaryLuckyEl.textContent = luckyMinutes;
+
+    if (luckyMinutes < 0) {
+        summaryLuckyLabelEl.textContent = 'Unlucky Minutes:';
+        summaryLuckyEl.classList.add('unlucky');
+    } else {
+        summaryLuckyLabelEl.textContent = 'Lucky Minutes:';
+        summaryLuckyEl.classList.remove('unlucky');
+    }
+
+    document.getElementById('summaryTotal').textContent = finalMinutes;
+
+    // Optional: Only show lucky minutes if user gambled
+    const luckyItem = document.getElementById('luckyMinutesItem');
+    if (luckyItem) {
+        if (forcedMinutes !== null) {
+            luckyItem.style.display = 'flex';
+        } else {
+            luckyItem.style.display = 'none';
+        }
+    }
+
 }
 
 function resetGame() {
     document.getElementById('endScreen').style.display = 'none';
+    document.getElementById('gambleScreen').style.display = 'none';
     document.getElementById('setupScreen').style.display = 'block';
+
+    // Clear summary values to prevent stale data on next End Screen
+    document.getElementById('summaryRegular').textContent = '0';
+    document.getElementById('summaryPlusFives').textContent = '0';
+
+    const summaryLuckyEl = document.getElementById('summaryLucky');
+    summaryLuckyEl.textContent = '0';
+    summaryLuckyEl.classList.remove('unlucky');
+    document.getElementById('summaryLuckyLabel').textContent = 'Lucky Minutes:';
+
+    document.getElementById('summaryTotal').textContent = '0';
+
+    // Reset gamble button for next time
+    const gambleBtn = document.querySelector('.gamble-action-button');
+    if (gambleBtn) {
+        gambleBtn.disabled = false;
+        gambleBtn.textContent = 'TRY YOUR LUCK!';
+    }
+
     wheelRotation = 0;
     minutesLocked = false;
     lockPermanent = false;
