@@ -6,7 +6,7 @@ Spin & Win is a simple wheel-of-fortune style game. Spin the wheel to earn minut
 
 ## How to Play
 
-1. Select the number of spins, the maximum minutes on the wheel and a background on the setup screen.
+1. Select the number of spins, the maximum minutes on the wheel and a theme (Candy Pop, Neon Galaxy, Rose Gold Glam or Classic) on the setup screen.
 2. Press **Start** to move to the wheel.
 3. Hold the **GOOD LUCK** button to build spin power and release to spin.
 4. The wheel can land on minute values, extra spins (`↻`) or a `+5` bonus.

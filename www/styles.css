@@ -550,20 +550,6 @@ select:hover {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
-.pointer {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 25px solid transparent;
-    border-right: 25px solid transparent;
-    border-top: 35px solid #E74C3C;
-    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.9));
-    z-index: 10;
-}
-
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     body {
@@ -584,12 +570,6 @@ select:hover {
 
     .spin-button-text {
         font-size: 1.6em;
-    }
-
-    .pointer {
-        border-left-width: 20px;
-        border-right-width: 20px;
-        border-top-width: 30px;
     }
 
     .score-display::after {
@@ -726,5 +706,468 @@ select:hover {
 
     100% {
         background-position: 0 50%;
+    }
+}
+
+/* ==========================================================
+   Themes - selected with body[data-theme]
+   ========================================================== */
+
+body {
+    font-family: var(--font);
+    background: var(--page-bg);
+    background-attachment: fixed;
+    color: var(--text);
+}
+
+button,
+select {
+    font-family: inherit;
+}
+
+.container,
+.wheel-screen {
+    position: relative;
+    z-index: 1;
+}
+
+/* Classic: the original look */
+body[data-theme="classic"] {
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    --page-bg: linear-gradient(135deg, #1a3a52 0%, #0d1f2d 100%);
+    --text: #555;
+    --title: #1a3a52;
+    --label: #777;
+    --card-bg: #fff;
+    --card-border: 0 solid transparent;
+    --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    --card-blur: none;
+    --inner-bg: #f8f9fa;
+    --inner-border: 2px dashed #F39C12;
+    --safe-bg: #f0f8ff;
+    --safe-border: 2px dashed #3498db;
+    --safe-value: #2980b9;
+    --select-bg: #fff;
+    --select-border: #3498DB;
+    --select-color: #333;
+    --pill-bg: #fff;
+    --pill-color: #1a3a52;
+    --pill-border: 0 solid transparent;
+    --pill-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    --pill-blur: none;
+    --tip-color: rgba(255, 255, 255, 0.8);
+    --b-start-bg: linear-gradient(135deg, #E74C3C, #C0392B);
+    --b-start-color: #fff;
+    --b-start-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    --b-go-bg: linear-gradient(135deg, #F39C12, #D35400);
+    --b-go-color: #fff;
+    --b-go-shadow: 0 10px 20px rgba(243, 156, 18, 0.4);
+    --b-safe-bg: linear-gradient(135deg, #3498db, #2980b9);
+    --b-safe-color: #fff;
+    --b-safe-shadow: 0 8px 15px rgba(52, 152, 219, 0.3);
+    --b-ok-bg: linear-gradient(135deg, #2ECC71, #27AE60);
+    --b-ok-color: #fff;
+    --b-ok-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    --hub-bg: linear-gradient(135deg, #F39C12 0%, #E67E22 100%);
+    --hub-border: 8px solid #C0392B;
+    --hub-color: #C0392B;
+    --hub-text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+    --hub-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.3);
+    --pin-bg: #E74C3C;
+    --pin-border: #E74C3C;
+    --pin-shadow: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6));
+}
+
+/* Candy Pop */
+body[data-theme="candy"] {
+    --font: 'Fredoka', 'Segoe UI', sans-serif;
+    --page-bg: linear-gradient(165deg, #ffd3ea 0%, #e7d6ff 52%, #c8efff 100%);
+    --text: #8a4477;
+    --title: #a2317f;
+    --label: #b986a8;
+    --card-bg: rgba(255, 255, 255, 0.88);
+    --card-border: 3px solid #fff;
+    --card-shadow: 0 10px 30px rgba(200, 80, 160, 0.22);
+    --card-blur: none;
+    --inner-bg: rgba(255, 255, 255, 0.75);
+    --inner-border: 2px dashed #ffbddf;
+    --safe-bg: rgba(233, 244, 255, 0.85);
+    --safe-border: 2px dashed #9fcfff;
+    --safe-value: #2f78c4;
+    --select-bg: #fff;
+    --select-border: #ffbddf;
+    --select-color: #7a2b64;
+    --pill-bg: #fff;
+    --pill-color: #a2317f;
+    --pill-border: 3px solid #ffbddf;
+    --pill-shadow: 0 6px 0 #ffbddf, 0 14px 24px rgba(200, 80, 160, 0.25);
+    --pill-blur: none;
+    --tip-color: #a2317f;
+    --b-start-bg: linear-gradient(180deg, #ff9ccc, #ff5fa2);
+    --b-start-color: #fff;
+    --b-start-shadow: 0 6px 0 #d63a80, 0 12px 20px rgba(214, 58, 128, 0.3);
+    --b-go-bg: linear-gradient(180deg, #ffd66b, #ffab2e);
+    --b-go-color: #7a3d00;
+    --b-go-shadow: 0 6px 0 #d98416, 0 12px 20px rgba(217, 132, 22, 0.3);
+    --b-safe-bg: linear-gradient(180deg, #a7d8ff, #73b8ff);
+    --b-safe-color: #0d3f73;
+    --b-safe-shadow: 0 6px 0 #4a92dd, 0 12px 20px rgba(74, 146, 221, 0.3);
+    --b-ok-bg: linear-gradient(180deg, #8ff0c4, #4fd39c);
+    --b-ok-color: #0d5a3d;
+    --b-ok-shadow: 0 6px 0 #2fa77a, 0 12px 20px rgba(47, 167, 122, 0.3);
+    --hub-bg: radial-gradient(circle at 35% 28%, #ff9ccc, #ff5fa2);
+    --hub-border: 7px solid #ffd6ec;
+    --hub-color: #fff;
+    --hub-text-shadow: 0 2px 4px rgba(120, 20, 80, 0.45);
+    --hub-shadow: 0 6px 18px rgba(214, 58, 128, 0.5), inset 0 3px 6px rgba(255, 255, 255, 0.45);
+    --pin-bg: linear-gradient(180deg, #ffe27a, #ffb300);
+    --pin-border: #fff;
+    --pin-shadow: drop-shadow(0 3px 4px rgba(150, 60, 110, 0.45));
+}
+
+/* Neon Galaxy */
+body[data-theme="galaxy"] {
+    --font: 'Baloo 2', 'Segoe UI', sans-serif;
+    --page-bg: radial-gradient(circle at 25% 12%, #4b2aa8 0%, transparent 46%), radial-gradient(circle at 85% 78%, #a01a86 0%, transparent 48%), #0f0828;
+    --text: #e6ddff;
+    --title: #fff;
+    --label: #b9a8f0;
+    --card-bg: rgba(255, 255, 255, 0.07);
+    --card-border: 1.5px solid rgba(255, 255, 255, 0.3);
+    --card-shadow: 0 0 40px rgba(150, 80, 255, 0.35);
+    --card-blur: blur(12px);
+    --inner-bg: rgba(255, 255, 255, 0.05);
+    --inner-border: 2px dashed rgba(255, 255, 255, 0.3);
+    --safe-bg: rgba(25, 211, 255, 0.07);
+    --safe-border: 2px dashed rgba(25, 211, 255, 0.5);
+    --safe-value: #6fe3ff;
+    --select-bg: rgba(255, 255, 255, 0.08);
+    --select-border: rgba(255, 255, 255, 0.4);
+    --select-color: #fff;
+    --pill-bg: rgba(255, 255, 255, 0.07);
+    --pill-color: #fff;
+    --pill-border: 1.5px solid rgba(255, 255, 255, 0.4);
+    --pill-shadow: 0 0 26px rgba(160, 90, 255, 0.55), inset 0 0 18px rgba(255, 255, 255, 0.08);
+    --pill-blur: blur(8px);
+    --tip-color: #b9a8f0;
+    --b-start-bg: linear-gradient(135deg, #ff3da8, #8f5bff);
+    --b-start-color: #fff;
+    --b-start-shadow: 0 0 26px rgba(255, 61, 168, 0.55);
+    --b-go-bg: linear-gradient(135deg, #ff3da8, #8f5bff);
+    --b-go-color: #fff;
+    --b-go-shadow: 0 0 26px rgba(255, 61, 168, 0.55);
+    --b-safe-bg: transparent;
+    --b-safe-color: #cdbdff;
+    --b-safe-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.4);
+    --b-ok-bg: linear-gradient(135deg, #14d8ff, #7a5cff);
+    --b-ok-color: #fff;
+    --b-ok-shadow: 0 0 22px rgba(60, 190, 255, 0.6);
+    --hub-bg: linear-gradient(#1c0f4d, #120833) padding-box, linear-gradient(135deg, #19d3ff, #ff3da8) border-box;
+    --hub-border: 5px solid transparent;
+    --hub-color: #fff;
+    --hub-text-shadow: 0 0 10px #ff5edb;
+    --hub-shadow: 0 0 26px rgba(255, 90, 220, 0.75), inset 0 0 14px rgba(160, 90, 255, 0.5);
+    --pin-bg: linear-gradient(180deg, #fff, #ffd6f5);
+    --pin-border: #ff3da8;
+    --pin-shadow: drop-shadow(0 0 8px rgba(255, 61, 168, 0.9));
+}
+
+/* Rose Gold Glam */
+body[data-theme="glam"] {
+    --font: 'Poppins', 'Segoe UI', sans-serif;
+    --page-bg: linear-gradient(140deg, #ffe6d9 0%, #f7d6f4 34%, #d8e6ff 66%, #d3f6ea 100%);
+    --text: #8a5a72;
+    --title: #8a3f5f;
+    --label: #b98aa0;
+    --card-bg: rgba(255, 255, 255, 0.55);
+    --card-border: 1.5px solid rgba(255, 255, 255, 0.95);
+    --card-shadow: 0 16px 40px rgba(190, 110, 140, 0.22);
+    --card-blur: blur(12px);
+    --inner-bg: rgba(255, 255, 255, 0.5);
+    --inner-border: 2px dashed #f0c9d3;
+    --safe-bg: rgba(255, 255, 255, 0.45);
+    --safe-border: 2px dashed #cdb8ee;
+    --safe-value: #7a5cc4;
+    --select-bg: rgba(255, 255, 255, 0.8);
+    --select-border: #f0c9d3;
+    --select-color: #7a3b56;
+    --pill-bg: rgba(255, 255, 255, 0.55);
+    --pill-color: #8a3f5f;
+    --pill-border: 1.5px solid rgba(255, 255, 255, 0.95);
+    --pill-shadow: 0 10px 30px rgba(190, 110, 140, 0.22);
+    --pill-blur: blur(10px);
+    --tip-color: #a5738b;
+    --b-start-bg: linear-gradient(135deg, #f9d2c0, #e59a8c 60%, #d9998a);
+    --b-start-color: #6e2a3f;
+    --b-start-shadow: 0 10px 22px rgba(217, 153, 138, 0.5);
+    --b-go-bg: linear-gradient(135deg, #f9d2c0, #e59a8c 60%, #d9998a);
+    --b-go-color: #6e2a3f;
+    --b-go-shadow: 0 10px 22px rgba(217, 153, 138, 0.5);
+    --b-safe-bg: rgba(255, 255, 255, 0.7);
+    --b-safe-color: #8a3f5f;
+    --b-safe-shadow: inset 0 0 0 1.5px #f0c9d3;
+    --b-ok-bg: linear-gradient(135deg, #f9d2c0, #e59a8c);
+    --b-ok-color: #6e2a3f;
+    --b-ok-shadow: 0 8px 20px rgba(217, 153, 138, 0.45);
+    --hub-bg: radial-gradient(circle at 35% 28%, #fff8f2, #f3c9bb);
+    --hub-border: 7px solid #e8b4a0;
+    --hub-color: #9a4a5f;
+    --hub-text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+    --hub-shadow: 0 6px 18px rgba(180, 90, 120, 0.4), inset 0 3px 6px rgba(255, 255, 255, 0.7);
+    --pin-bg: linear-gradient(180deg, #f0729a, #b83a68);
+    --pin-border: #fff;
+    --pin-shadow: drop-shadow(0 3px 4px rgba(120, 30, 70, 0.4));
+}
+
+/* Cards */
+.setup-screen,
+.gamble-screen,
+.end-screen {
+    background: var(--card-bg);
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
+    -webkit-backdrop-filter: var(--card-blur);
+    backdrop-filter: var(--card-blur);
+}
+
+.gamble-card {
+    background: var(--inner-bg);
+    border: var(--inner-border);
+    box-shadow: none;
+}
+
+.gamble-card.safe-card {
+    background: var(--safe-bg);
+    border: var(--safe-border);
+}
+
+.gamble-card .outcome.safe .outcome-value {
+    color: var(--safe-value) !important;
+}
+
+.summary-breakdown {
+    background: var(--inner-bg);
+    border: var(--inner-border);
+    box-shadow: none;
+}
+
+.setup-screen h1,
+.win-message {
+    color: var(--title);
+}
+
+.dropdown-group label,
+.summary-item,
+.summary-total,
+.gamble-info,
+.gamble-question {
+    color: var(--text);
+}
+
+.summary-total {
+    color: var(--title);
+    border-top-color: var(--label);
+}
+
+.summary-item {
+    border-bottom-color: color-mix(in srgb, var(--label) 40%, transparent);
+}
+
+.outcome-label {
+    color: var(--label);
+}
+
+.outcome-vs {
+    color: var(--label);
+    opacity: 0.7;
+}
+
+select {
+    background: var(--select-bg);
+    border-color: var(--select-border);
+    color: var(--select-color);
+}
+
+select option {
+    background: #fff;
+    color: #333;
+}
+
+/* Buttons */
+.start-button {
+    background: var(--b-start-bg);
+    color: var(--b-start-color);
+    box-shadow: var(--b-start-shadow);
+}
+
+.gamble-action-button {
+    background: var(--b-go-bg);
+    color: var(--b-go-color);
+    box-shadow: var(--b-go-shadow);
+}
+
+.skip-gamble-button {
+    background: var(--b-safe-bg);
+    color: var(--b-safe-color);
+    box-shadow: var(--b-safe-shadow);
+}
+
+.new-spin-button,
+.end-game-button {
+    background: var(--b-ok-bg);
+    color: var(--b-ok-color);
+    box-shadow: var(--b-ok-shadow);
+}
+
+.end-game-button {
+    box-shadow: var(--b-ok-shadow);
+}
+
+/* Wheel screen */
+.score-display,
+.chip {
+    background: var(--pill-bg);
+    color: var(--pill-color);
+    border: var(--pill-border);
+    box-shadow: var(--pill-shadow);
+    -webkit-backdrop-filter: var(--pill-blur);
+    backdrop-filter: var(--pill-blur);
+}
+
+.end-game-button.chip {
+    background: var(--b-ok-bg);
+    color: var(--b-ok-color);
+    box-shadow: var(--b-ok-shadow);
+}
+
+.score-display::after {
+    color: var(--tip-color);
+}
+
+.spin-button {
+    background: var(--hub-bg);
+    border: var(--hub-border);
+    box-shadow: var(--hub-shadow);
+}
+
+.spin-button-text {
+    color: var(--hub-color);
+    text-shadow: var(--hub-text-shadow);
+}
+
+/* Pointer: a teardrop that flicks as slices pass (--tilt is set from script.js) */
+.pointer {
+    position: absolute;
+    top: calc(2.5% - 6px);
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: rotate(var(--tilt, 0deg));
+    transform-origin: 0 0;
+    filter: var(--pin-shadow);
+    z-index: 10;
+}
+
+.pointer::before {
+    content: '';
+    position: absolute;
+    left: -15px;
+    top: -2px;
+    width: 30px;
+    height: 30px;
+    background: var(--pin-bg);
+    border: 3px solid var(--pin-border);
+    border-radius: 50% 50% 0 50%;
+    transform: rotate(45deg);
+}
+
+.pointer::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+}
+
+/* Background decorations */
+.theme-fx {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.fx-spark {
+    position: absolute;
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+    animation: fxRise linear infinite;
+}
+
+@keyframes fxRise {
+    from {
+        transform: translateY(40px) rotate(0);
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 0.9;
+    }
+
+    to {
+        transform: translateY(-100vh) rotate(200deg);
+        opacity: 0;
+    }
+}
+
+.fx-star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: fxTwinkle 3s ease-in-out infinite;
+}
+
+@keyframes fxTwinkle {
+
+    0%,
+    100% {
+        opacity: 0.15;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.fx-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.7;
+    animation: fxDrift 14s ease-in-out infinite alternate;
+}
+
+@keyframes fxDrift {
+    from {
+        transform: translate(0, 0);
+    }
+
+    to {
+        transform: translate(40px, -30px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .fx-spark,
+    .fx-star,
+    .fx-blob,
+    .celebration span,
+    .message-icon {
+        animation: none;
     }
 }

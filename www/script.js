@@ -17,51 +17,101 @@ let spinButtonLocked = false;
 let finalGambleMinutes = 0;
 let gambleChoice = 'none';
 
-// Colors matching the reference image
-const colors = [
-    '#E74C3C', '#2ECC71', '#3498DB', '#9B59B6',
-    '#F39C12', '#E74C3C', '#2ECC71', '#3498DB',
-    '#9B59B6', '#F39C12', '#E74C3C', '#2ECC71',
-    '#3498DB', '#9B59B6', '#F39C12', '#E74C3C'
-];
-
-// Available background styles
-const backgrounds = {
-    default: {
-        background: 'linear-gradient(135deg, #1a3a52 0%, #0d1f2d 100%)'
+// Visual themes. CSS handles the page (body[data-theme]); these settings drive the canvas wheel.
+const themes = {
+    candy: {
+        font: 'Fredoka', weight: 600, fontSize: 27,
+        palette: [['#ffc4dd', '#ff8fc0'], ['#ffe0c2', '#ffb98a'], ['#d3fbe6', '#8fe6bd'], ['#e4d6ff', '#b99cff'], ['#cdeaff', '#8ec9ff'], ['#fff5b8', '#ffe066']],
+        special: ['#fff3a6', '#ffc233'], text: '#7a2b64', textStroke: '#ffffff', strokeWidth: 5, specialText: '#8a4a00',
+        sep: '#ffffff', sepWidth: 3, rim: ['#ffffff', '#ffd0e8', '#ffffff'], rimInner: '#ffb3d9',
+        bulbs: ['#ff4fa3'], glow: 'rgba(255,79,163,.95)', shadow: 'rgba(200,80,160,.45)', gloss: 0.5,
+        confetti: ['#ff8fc0', '#ffe066', '#8fe6bd', '#b99cff', '#8ec9ff'],
+        fx: 'sparkles'
     },
-    rainbow: {
-        background: 'linear-gradient(135deg, #FF0000 0%, #FF7F00 14%, #FFFF00 28%, #00FF00 42%, #0000FF 57%, #4B0082 71%, #9400D3 100%)'
+    galaxy: {
+        font: 'Baloo 2', weight: 800, fontSize: 27,
+        palette: [['#ff3da8', '#c2107a'], ['#8f5bff', '#4a1fc4'], ['#19d3ff', '#0a78d6'], ['#ff9a3d', '#e0561b'], ['#2ee6a6', '#0a9a78'], ['#ff5d6c', '#c01f4a']],
+        special: ['#fff27a', '#ffb400'], text: '#ffffff', textStroke: 'rgba(25,0,70,.6)', strokeWidth: 5, specialText: '#4a2600',
+        sep: '#150a38', sepWidth: 3.5, rim: ['#2f1a7e', '#0d0522', '#3f2599'], rimInner: '#0b0420',
+        bulbs: ['#19d3ff', '#ff3da8'], glow: 'rgba(120,200,255,1)', shadow: 'rgba(150,80,255,.75)', gloss: 0.16,
+        confetti: ['#ff3da8', '#19d3ff', '#ffe14d', '#8f5bff', '#2ee6a6'],
+        fx: 'stars'
     },
-    sunset: {
-        background: 'linear-gradient(to bottom, #FF2F8A 0%, #FFA500 40%, #FFD700 60%, #0099FF 100%)'
+    glam: {
+        font: 'Poppins', weight: 600, fontSize: 24,
+        palette: [['#ffb199', '#ff7e88'], ['#ffd58a', '#ffab5e'], ['#f7a8d8', '#d96bb8'], ['#c9b3ff', '#8d78f0'], ['#9fe3e0', '#4fc1c8'], ['#ffc6d9', '#ff8fb0']],
+        special: ['#fff0b8', '#f2bd45'], text: '#ffffff', textStroke: 'rgba(120,40,80,.55)', strokeWidth: 4.5, specialText: '#7a4210',
+        sep: 'rgba(255,255,255,.9)', sepWidth: 2.5, rim: ['#fbe3d3', '#e8b4a0', '#fff3e8', '#d9998a', '#fbe3d3'], rimInner: '#c98a7c',
+        bulbs: ['#ffffff'], glow: 'rgba(255,255,255,1)', shadow: 'rgba(180,90,120,.45)', gloss: 0.42,
+        confetti: ['#ff7e88', '#ffd58a', '#f7a8d8', '#c9b3ff', '#9fe3e0'],
+        fx: 'blobs'
     },
-    cotton: {
-        background: 'linear-gradient(135deg, #FF95D6 0%, #7FDBFF 50%, #FFC371 100%)'
-    },
-    forest: {
-        background: 'linear-gradient(135deg, #00A86B 0%, #2ECC71 50%, #006400 100%)'
-    },
-    underwater: {
-        background: 'linear-gradient(to bottom, #00CED1 0%, #1E90FF 50%, #0077BE 100%)'
-    },
-    animated: {
-        background: 'linear-gradient(-45deg, #FFD700, #FF1493, #5BC0EB, #00BFA6)',
-        backgroundSize: '400% 400%',
-        animation: 'gradientShift 10s ease infinite'
-    },
-    bubblegum: {
-        background: 'radial-gradient(ellipse at top left, #FF8AD6 0%, #FF55A3 50%, #8BD3FF 100%)'
+    classic: {
+        font: 'Arial', weight: 700, fontSize: 28,
+        palette: [['#E74C3C', '#E74C3C'], ['#2ECC71', '#2ECC71'], ['#3498DB', '#3498DB'], ['#9B59B6', '#9B59B6'], ['#F39C12', '#F39C12']],
+        special: null, text: '#FFF8DC', textStroke: '#8B4513', strokeWidth: 4, specialText: '#FFF8DC',
+        sep: '#1a3a52', sepWidth: 4, rim: ['#1a3a52', '#1a3a52'], rimInner: '#0a1929',
+        bulbs: ['#FFD700'], glow: 'rgba(255,215,0,.8)', shadow: 'rgba(0,0,0,.35)', gloss: 0,
+        confetti: ['#E74C3C', '#2ECC71', '#3498DB', '#F39C12', '#9B59B6'],
+        fx: null
     }
 };
+const DEFAULT_THEME = 'candy';
+let currentTheme = DEFAULT_THEME;
+let winIndex = -1;
+let confettiParticles = [];
+let canvasSize = 400;
 
-function applyBackground(key) {
-    const body = document.body;
-    const bg = backgrounds[key];
-    if (!bg) return;
-    body.style.background = bg.background;
-    body.style.backgroundSize = bg.backgroundSize || '';
-    body.style.animation = bg.animation || '';
+function applyTheme(key) {
+    if (!themes[key]) key = DEFAULT_THEME;
+    currentTheme = key;
+    document.body.dataset.theme = key;
+    buildThemeFx(themes[key].fx);
+    if (isWheelVisible()) drawWheel();
+}
+
+function buildThemeFx(kind) {
+    const fx = document.getElementById('themeFx');
+    fx.innerHTML = '';
+    if (!kind || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const rnd = (min, max) => min + Math.random() * (max - min);
+    if (kind === 'sparkles') {
+        const symbols = ['✦', '♥', '✿', '✧', '★'];
+        for (let i = 0; i < 22; i++) {
+            const el = document.createElement('span');
+            el.className = 'fx-spark';
+            el.textContent = symbols[i % symbols.length];
+            el.style.left = rnd(0, 97) + '%';
+            el.style.top = rnd(30, 100) + '%';
+            el.style.fontSize = rnd(12, 28) + 'px';
+            el.style.animationDuration = rnd(8, 16) + 's';
+            el.style.animationDelay = -rnd(0, 14) + 's';
+            fx.appendChild(el);
+        }
+    } else if (kind === 'stars') {
+        for (let i = 0; i < 110; i++) {
+            const el = document.createElement('i');
+            el.className = 'fx-star';
+            const size = Math.random() < 0.15 ? 3 : Math.random() < 0.5 ? 2 : 1;
+            el.style.width = el.style.height = size + 'px';
+            el.style.left = rnd(0, 100) + '%';
+            el.style.top = rnd(0, 100) + '%';
+            el.style.animationDuration = rnd(2, 5) + 's';
+            el.style.animationDelay = -rnd(0, 4) + 's';
+            fx.appendChild(el);
+        }
+    } else if (kind === 'blobs') {
+        [['#ffb9c9', 34, 8, 0], ['#c8b6ff', 30, 70, 30], ['#a8f0dc', 34, 5, 62], ['#ffe2a8', 24, 75, 5]].forEach(([color, size, x, y], i) => {
+            const el = document.createElement('div');
+            el.className = 'fx-blob';
+            el.style.cssText = `background:${color};width:${size}vmax;height:${size}vmax;left:${x}%;top:${y}%;animation-delay:${-i * 3}s`;
+            fx.appendChild(el);
+        });
+    }
+}
+
+function isWheelVisible() {
+    return document.getElementById('wheelScreen').style.display === 'block';
 }
 
 function startGame() {
@@ -71,10 +121,12 @@ function startGame() {
     localStorage.setItem('numSpins', totalSpins);
     localStorage.setItem('maxMinutes', maxMinutes);
     const bgValue = document.getElementById('backgroundSelect').value;
-    localStorage.setItem('background', bgValue);
+    localStorage.setItem('theme', bgValue);
     currentSpin = 0;
     totalMinutes = 0;
     plusFiveBonus = 0;
+    winIndex = -1;
+    confettiParticles = [];
     minutesLocked = false;
     lockPermanent = false;
     gambleChoice = 'none';
@@ -142,96 +194,201 @@ function generateSegments() {
 function initializeCanvas() {
     const canvas = document.getElementById('wheelCanvas');
     const container = canvas.parentElement;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    // Set canvas size to match container
-    const size = Math.min(400, container.offsetWidth);
-    canvas.width = size;
-    canvas.height = size;
+    // Logical size matches the container; the backing store is scaled for sharp rendering
+    canvasSize = Math.min(400, container.offsetWidth);
+    canvas.width = canvasSize * dpr;
+    canvas.height = canvasSize * dpr;
 }
 
 function drawWheel() {
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = Math.min(centerX, centerY) - 20;
+    const theme = themes[currentTheme];
+    const size = canvasSize;
+    if (size <= 0 || segments.length === 0) return;
+    const dpr = canvas.width / size;
+    const centerX = size / 2;
+    const centerY = size / 2;
+    const rimWidth = size * 0.055;
+    const radius = size / 2 - rimWidth - 10;
+    const anglePerSegment = (Math.PI * 2) / segments.length;
+    const now = performance.now() / 1000;
 
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, size, size);
 
-    // Draw dark background circle
+    // Rim with drop shadow
+    ctx.save();
+    ctx.shadowColor = theme.shadow;
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 10;
     ctx.beginPath();
-    ctx.arc(centerX, centerY, radius + 15, 0, Math.PI * 2);
-    ctx.fillStyle = '#1a3a52';
+    ctx.arc(centerX, centerY, radius + rimWidth, 0, Math.PI * 2);
+    ctx.fillStyle = theme.rim[0];
+    ctx.fill();
+    ctx.restore();
+
+    const rimGradient = ctx.createLinearGradient(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
+    theme.rim.forEach((color, i) => rimGradient.addColorStop(i / (theme.rim.length - 1), color));
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius + rimWidth, 0, Math.PI * 2);
+    ctx.fillStyle = rimGradient;
     ctx.fill();
 
-    // Draw segments
-    const anglePerSegment = (Math.PI * 2) / segments.length;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius + 3, 0, Math.PI * 2);
+    ctx.fillStyle = theme.rimInner;
+    ctx.fill();
 
+    // Segments
     segments.forEach((segment, index) => {
         const startAngle = index * anglePerSegment + wheelRotation;
-        const endAngle = (index + 1) * anglePerSegment + wheelRotation;
+        const endAngle = startAngle + anglePerSegment;
+        const isSpecial = segment.type !== 'minutes' && theme.special;
+        const pair = isSpecial ? theme.special : theme.palette[index % theme.palette.length];
 
-        // Draw segment
+        const fill = ctx.createRadialGradient(centerX, centerY, radius * 0.15, centerX, centerY, radius);
+        fill.addColorStop(0, pair[0]);
+        fill.addColorStop(1, pair[1]);
+
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.arc(centerX, centerY, radius, startAngle, endAngle);
         ctx.closePath();
-        ctx.fillStyle = colors[index % colors.length];
+        ctx.fillStyle = fill;
         ctx.fill();
-
-        // Draw segment border
-        ctx.strokeStyle = '#1a3a52';
-        ctx.lineWidth = 4;
+        ctx.strokeStyle = theme.sep;
+        ctx.lineWidth = theme.sepWidth;
         ctx.stroke();
+    });
 
-        // Draw text
+    // Glossy highlight
+    if (theme.gloss > 0) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.clip();
+        const gloss = ctx.createLinearGradient(0, centerY - radius, 0, centerY);
+        gloss.addColorStop(0, `rgba(255,255,255,${theme.gloss})`);
+        gloss.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = gloss;
+        ctx.beginPath();
+        ctx.ellipse(centerX, centerY - radius * 0.5, radius * 0.86, radius * 0.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius - 1, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0,0,0,.14)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Labels
+    const fontSize = theme.fontSize * (size / 320);
+    segments.forEach((segment, index) => {
+        const isSpecial = segment.type !== 'minutes' && theme.special;
         ctx.save();
         ctx.translate(centerX, centerY);
-        ctx.rotate(startAngle + anglePerSegment / 2);
-
-        // Text styling - responsive font size
+        ctx.rotate(index * anglePerSegment + wheelRotation + anglePerSegment / 2);
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#FFF8DC';
-        ctx.strokeStyle = '#8B4513';
-        ctx.lineWidth = 4;
-
-        // Responsive font size based on canvas size
-        const fontSize = Math.max(20, Math.min(32, canvas.width / 12));
-        ctx.font = `bold ${fontSize}px Arial`;
-
-        // Position text at 75% of radius
-        const textRadius = radius * 0.75;
+        ctx.lineJoin = 'round';
+        ctx.font = `${theme.weight} ${fontSize + (isSpecial ? 2 : 0)}px "${theme.font}", Arial, sans-serif`;
         const text = segment.value.toString();
-
-        // Draw text outline first
-        ctx.strokeText(text, textRadius, 0);
-        // Then fill
-        ctx.fillText(text, textRadius, 0);
-
+        ctx.strokeStyle = isSpecial ? 'rgba(255,255,255,.9)' : theme.textStroke;
+        ctx.lineWidth = theme.strokeWidth;
+        ctx.strokeText(text, radius * 0.72, 1);
+        ctx.fillStyle = isSpecial ? theme.specialText : theme.text;
+        ctx.fillText(text, radius * 0.72, 1);
         ctx.restore();
     });
 
-    // Draw outer ring
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = '#0a1929';
-    ctx.lineWidth = 8;
-    ctx.stroke();
-
-    // Draw decorative dots around the edge
-    const dotCount = 24;
-    for (let i = 0; i < dotCount; i++) {
-        const angle = (i / dotCount) * Math.PI * 2 + wheelRotation;
-        const dotX = centerX + Math.cos(angle) * (radius + 12);
-        const dotY = centerY + Math.sin(angle) * (radius + 12);
-
+    // Pulse the winning segment once the wheel has stopped
+    if (winIndex >= 0 && !isSpinning) {
+        const startAngle = winIndex * anglePerSegment + wheelRotation;
         ctx.beginPath();
-        ctx.arc(dotX, dotY, 3, 0, Math.PI * 2);
-        ctx.fillStyle = '#FFD700';
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, startAngle + anglePerSegment);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(255,255,255,${0.12 + 0.18 * (0.5 + 0.5 * Math.sin(now * 7))})`;
         ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 4;
+        ctx.stroke();
     }
+
+    // Rim lights: chase while spinning, twinkle when idle
+    const bulbCount = 22;
+    const bulbRadius = radius + rimWidth * 0.62;
+    for (let i = 0; i < bulbCount; i++) {
+        const angle = (i / bulbCount) * Math.PI * 2;
+        const lit = isSpinning ? (i + Math.floor(now * 12)) % 2 === 0 : true;
+        const alpha = isSpinning ? (lit ? 1 : 0.25) : 0.65 + 0.35 * Math.sin(now * 2.4 + i * 0.7);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.shadowColor = theme.glow;
+        ctx.shadowBlur = lit ? 10 : 0;
+        ctx.beginPath();
+        ctx.arc(centerX + Math.cos(angle) * bulbRadius, centerY + Math.sin(angle) * bulbRadius, 3.4, 0, Math.PI * 2);
+        ctx.fillStyle = theme.bulbs[i % theme.bulbs.length];
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Confetti
+    confettiParticles = confettiParticles.filter(p => p.life > 0);
+    confettiParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.12;
+        p.vx *= 0.99;
+        p.rot += p.vr;
+        p.life -= 1;
+        ctx.save();
+        ctx.globalAlpha = Math.min(1, p.life / 30);
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+    });
+
+    updatePointerTilt(anglePerSegment);
+}
+
+function updatePointerTilt(anglePerSegment) {
+    const pointer = document.getElementById('pointer');
+    if (!pointer) return;
+    let tilt = 0;
+    if (isSpinning) {
+        const position = (((3 * Math.PI / 2 - wheelRotation) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) / anglePerSegment;
+        tilt = -28 * Math.max(0, ((position % 1) - 0.62) / 0.38);
+    }
+    pointer.style.setProperty('--tilt', tilt + 'deg');
+}
+
+function burstConfetti() {
+    const colors = themes[currentTheme].confetti;
+    for (let i = 0; i < 70; i++) {
+        const angle = -Math.PI / 2 + (Math.random() - 0.5) * 2.2;
+        const speed = 3 + Math.random() * 6;
+        confettiParticles.push({
+            x: canvasSize / 2, y: canvasSize / 2,
+            vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 1,
+            rot: Math.random() * 6, vr: (Math.random() - 0.5) * 0.4,
+            w: 5 + Math.random() * 6, h: 3 + Math.random() * 4,
+            color: colors[i % colors.length], life: 90 + Math.random() * 60
+        });
+    }
+}
+
+// Keeps rim lights and the winner pulse animating while the wheel is idle
+function idleLoop() {
+    if (isWheelVisible() && !isSpinning) drawWheel();
+    requestAnimationFrame(idleLoop);
 }
 
 function setupSpinButton() {
@@ -311,6 +468,7 @@ function spin(power) {
     }
 
     isSpinning = true;
+    winIndex = -1;
     const spinDuration = 3000 + (power * 2000);
     const spinRotations = 5 + (power * 5);
     const totalRotation = spinRotations * Math.PI * 2 + Math.random() * Math.PI * 2;
@@ -352,6 +510,8 @@ function checkResult() {
 
     const winningIndex = Math.floor(pointerAngle / anglePerSegment);
     const result = segments[winningIndex];
+    winIndex = winningIndex;
+    burstConfetti();
 
     // Handle result based on type
     if (result.type === 'tryAgain') {
@@ -637,14 +797,14 @@ function loadSavedOptions() {
 
     const savedNum = localStorage.getItem('numSpins');
     const savedMax = localStorage.getItem('maxMinutes');
-    const savedBg = localStorage.getItem('background');
+    const savedBg = localStorage.getItem('theme');
 
     if (savedNum) numSpinsEl.value = savedNum;
     if (savedMax) maxMinutesEl.value = savedMax;
-    if (savedBg) {
+    if (savedBg && themes[savedBg]) {
         bgEl.value = savedBg;
-        applyBackground(savedBg);
     }
+    applyTheme(bgEl.value);
 
     numSpinsEl.addEventListener('change', () => {
         localStorage.setItem('numSpins', numSpinsEl.value);
@@ -655,8 +815,8 @@ function loadSavedOptions() {
     });
 
     bgEl.addEventListener('change', () => {
-        localStorage.setItem('background', bgEl.value);
-        applyBackground(bgEl.value);
+        localStorage.setItem('theme', bgEl.value);
+        applyTheme(bgEl.value);
     });
 }
 
@@ -671,4 +831,5 @@ window.addEventListener('resize', () => {
 // Initialize on load
 window.addEventListener('load', () => {
     loadSavedOptions();
+    idleLoop();
 });
