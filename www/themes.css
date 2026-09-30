@@ -1,0 +1,429 @@
+/* Themes: Candy Pop, Galaxy Night, Holo Dream, Cat Café.
+   Each body[data-theme] block overrides the tokens defined in styles.css.
+   Classic (the original look) uses the defaults and the Background dropdown. */
+
+/* ---------- Layers ---------- */
+.theme-fx {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.confetti-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.container,
+.wheel-screen {
+    position: relative;
+    z-index: 1;
+}
+
+/* ---------- Shared styling for every theme except Classic ---------- */
+body:not([data-theme="classic"]) button,
+body:not([data-theme="classic"]) select {
+    font-family: inherit;
+}
+
+body:not([data-theme="classic"]) .setup-screen,
+body:not([data-theme="classic"]) .gamble-screen,
+body:not([data-theme="classic"]) .end-screen {
+    border-radius: 28px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+body:not([data-theme="classic"]) .score-display,
+body:not([data-theme="classic"]) .chip {
+    font-family: var(--font-display);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+/* Room for the "Tap to lock" hint above the taller themed pointers */
+body:not([data-theme="classic"]) .score-display {
+    margin-bottom: 44px;
+}
+
+body:not([data-theme="classic"]) .pointer {
+    width: 46px;
+    height: auto;
+    border: 0;
+    top: -14px;
+    transform-origin: 50% 30%;
+    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.28));
+}
+
+.pointer svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+body:not([data-theme="classic"]) .spin-button {
+    border-width: 4px;
+}
+
+body:not([data-theme="classic"]) .spin-button-text {
+    font-family: var(--font-display);
+    font-size: 1.3em;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-shadow: none;
+    position: relative;
+}
+
+/* Glowing power ring replaces the progress bar */
+.power-ring {
+    display: none;
+}
+
+body:not([data-theme="classic"]) .power-ring {
+    display: block;
+    position: absolute;
+    inset: -16%;
+    width: 132%;
+    height: 132%;
+    transform: rotate(-90deg);
+    pointer-events: none;
+    overflow: visible;
+}
+
+.power-ring circle {
+    fill: none;
+    stroke: var(--ring);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    filter: drop-shadow(0 0 4px var(--ring));
+}
+
+body:not([data-theme="classic"]) .progress-bar {
+    display: none;
+}
+
+.hub-ears {
+    display: none;
+}
+
+body:not([data-theme="classic"]) .message-content {
+    font-family: var(--font-display);
+}
+
+/* ---------- Decorations ---------- */
+.bubble {
+    position: absolute;
+    bottom: -100px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.95) 0 8%, rgba(255, 255, 255, 0.25) 22%, rgba(255, 160, 205, 0.18) 60%, rgba(255, 255, 255, 0.55) 100%);
+    animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+    to {
+        transform: translate(var(--drift), -120vh);
+    }
+}
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: #FFFFFF;
+    animation: twinkle ease-in-out infinite alternate;
+}
+
+.star.big {
+    border-radius: 0;
+    background: #FFF2C0;
+    clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
+@keyframes twinkle {
+    from {
+        opacity: 0.15;
+        transform: scale(0.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.moon {
+    position: absolute;
+    right: 8%;
+    top: 8%;
+    border-radius: 50%;
+    box-shadow: -12px 8px 0 0 #FFE9A8;
+    transform: rotate(-20deg);
+    opacity: 0.9;
+}
+
+.sparkle {
+    position: absolute;
+    background: #FFFFFF;
+    clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
+    animation: sparkle ease-in-out infinite alternate;
+}
+
+@keyframes sparkle {
+    from {
+        opacity: 0.2;
+        transform: scale(0.5) rotate(0deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(45deg);
+    }
+}
+
+/* ---------- Candy Pop ---------- */
+body[data-theme="candy"] {
+    --font: "Fredoka", "Nunito", system-ui, sans-serif;
+    --font-display: var(--font);
+    --card-bg: rgba(255, 255, 255, 0.92);
+    --card-border: 3px solid #FFD1E4;
+    --heading: #C2457F;
+    --label: #B8407A;
+    --muted: #B07A98;
+    --select-border: #FFB9D6;
+    --select-hover: #FF5FA2;
+    --select-bg: #FFF7FB;
+    --select-fg: #8A2F5E;
+    --btn-primary: linear-gradient(135deg, #FF8FC0, #FF4F97);
+    --btn-finish: linear-gradient(135deg, #7EE3C5, #3FBF99);
+    --btn-gamble: linear-gradient(135deg, #FFB26B, #FF6F91);
+    --btn-safe: linear-gradient(135deg, #7FCBFF, #6C8CFF);
+    --pill-bg: #FFFFFF;
+    --pill-fg: #C2457F;
+    --pill-border: 3px solid #FFB9D6;
+    --hint: #C2457F;
+    --hub-bg: radial-gradient(circle at 35% 28%, #FFFFFF 0%, #FFE6F1 42%, #FF9CC6 100%);
+    --hub-border: #FFFFFF;
+    --hub-fg: #C2457F;
+    --hub-shadow: 0 8px 18px -4px rgba(194, 69, 127, 0.5), inset 0 -5px 10px rgba(194, 69, 127, 0.25);
+    --ring: #FF5FA2;
+    --gamble-card-bg: #FFF4F9;
+    --gamble-card-border: #FFB26B;
+    --safe-card-bg: #F0F8FF;
+    --safe-card-border: #7FCBFF;
+    --win: #22A77C;
+    --lose: #F0507A;
+    --safe: #4A8FE0;
+    --summary-fg: #8A5A74;
+    --summary-line: #FFD1E4;
+    --toast-bg: #FFFFFF;
+    --toast-bonus-bg: #FFFFFF;
+    --toast-fg: #FF4F97;
+    --toast-border: 3px solid #FFB9D6;
+    --ray: rgba(255, 111, 168, 0.2);
+    --title-grad: linear-gradient(90deg, #FF4F97, #FF9A3D);
+    --medal: radial-gradient(circle at 35% 30%, #FFF6C8 0%, #FFD24D 55%, #F0A800 100%);
+    --medal-fg: #8A5A00;
+    --ribbon-1: #FF6FA8;
+    --ribbon-2: #3FAEF5;
+    --bar-wheel: #FF6FA8;
+    --bar-bonus: #3FAEF5;
+    --bar-coin: #FFB81F;
+    background: linear-gradient(165deg, #FFD3E6 0%, #FFE6D2 48%, #D3F5EA 100%);
+}
+
+/* ---------- Galaxy Night ---------- */
+body[data-theme="galaxy"] {
+    --font: "Baloo 2", "Nunito", system-ui, sans-serif;
+    --font-display: var(--font);
+    --card-bg: rgba(26, 16, 74, 0.82);
+    --card-border: 2px solid rgba(255, 216, 107, 0.55);
+    --heading: #FFE9A8;
+    --label: #D9CCFF;
+    --muted: #B9A8E6;
+    --select-border: #FFD86B;
+    --select-hover: #F72585;
+    --select-bg: #1E1450;
+    --select-fg: #FFE9A8;
+    --btn-primary: linear-gradient(135deg, #F72585, #7B2FF7);
+    --btn-finish: linear-gradient(135deg, #F72585, #9D1FD8);
+    --btn-gamble: linear-gradient(135deg, #FFB703, #F72585);
+    --btn-safe: linear-gradient(135deg, #4CC9F0, #4361EE);
+    --pill-bg: rgba(255, 255, 255, 0.1);
+    --pill-fg: #FFE9A8;
+    --pill-border: 3px solid rgba(255, 216, 107, 0.8);
+    --hint: rgba(255, 233, 168, 0.75);
+    --hub-bg: radial-gradient(circle at 35% 28%, #FFF6D2 0%, #FFD86B 45%, #E39B12 100%);
+    --hub-border: #2A1B66;
+    --hub-fg: #2A1B66;
+    --hub-shadow: 0 0 26px rgba(255, 216, 107, 0.65), inset 0 -5px 10px rgba(150, 80, 0, 0.3);
+    --ring: #FFD86B;
+    --gamble-card-bg: rgba(255, 255, 255, 0.06);
+    --gamble-card-border: #FFD86B;
+    --safe-card-bg: rgba(76, 201, 240, 0.08);
+    --safe-card-border: #4CC9F0;
+    --win: #6BF0A8;
+    --lose: #FF6B9A;
+    --safe: #6CD3FF;
+    --summary-fg: #E6DDFF;
+    --summary-line: rgba(255, 255, 255, 0.18);
+    --toast-bg: linear-gradient(135deg, #F72585, #7B2FF7);
+    --toast-bonus-bg: linear-gradient(135deg, #FFB703, #F72585);
+    --toast-fg: #FFFFFF;
+    --toast-border: 3px solid #FFD86B;
+    --ray: rgba(255, 216, 107, 0.14);
+    --title-grad: linear-gradient(90deg, #FFD86B, #FF6BD6);
+    --medal: radial-gradient(circle at 35% 30%, #FFF6D2 0%, #FFD86B 50%, #E39B12 100%);
+    --medal-fg: #4A2A00;
+    --ribbon-1: #F72585;
+    --ribbon-2: #4CC9F0;
+    --bar-wheel: #F72585;
+    --bar-bonus: #4CC9F0;
+    --bar-coin: #FFD86B;
+    background: radial-gradient(circle at 25% 12%, #5A34B5 0%, #231660 38%, #0B0A28 100%);
+}
+
+/* ---------- Holo Dream ---------- */
+body[data-theme="holo"] {
+    --font: "Fredoka", "Nunito", system-ui, sans-serif;
+    --font-display: "Righteous", "Fredoka", system-ui, sans-serif;
+    --card-bg: rgba(255, 255, 255, 0.62);
+    --card-border: 2px solid #FFFFFF;
+    --heading: #6B3FD1;
+    --label: #7A5FB0;
+    --muted: #9A86C4;
+    --select-border: #D2B6FF;
+    --select-hover: #FF9FD8;
+    --select-bg: rgba(255, 255, 255, 0.8);
+    --select-fg: #5A34B5;
+    --btn-primary: linear-gradient(135deg, #FF9FD8, #B06CFF);
+    --btn-finish: linear-gradient(135deg, #D2B6FF, #8A5CF5);
+    --btn-gamble: linear-gradient(135deg, #FFC98A, #FF7AB3);
+    --btn-safe: linear-gradient(135deg, #8EE6FF, #8A7CFF);
+    --pill-bg: rgba(255, 255, 255, 0.6);
+    --pill-fg: #6B3FD1;
+    --pill-border: 3px solid #FFFFFF;
+    --hint: #6B3FD1;
+    --hub-bg: conic-gradient(from 210deg, #FFD1F0, #C7F2FF, #E6D1FF, #FFF3C7, #D1FFE9, #FFD1F0);
+    --hub-border: #FFFFFF;
+    --hub-fg: #6B3FD1;
+    --hub-shadow: 0 8px 20px -4px rgba(120, 80, 220, 0.45), inset 0 3px 8px rgba(255, 255, 255, 0.9);
+    --ring: #B06CFF;
+    --gamble-card-bg: rgba(255, 255, 255, 0.5);
+    --gamble-card-border: #FF9FD8;
+    --safe-card-bg: rgba(255, 255, 255, 0.5);
+    --safe-card-border: #8EC9FF;
+    --win: #16996A;
+    --lose: #E8487A;
+    --safe: #4F7BE8;
+    --summary-fg: #6A5A8C;
+    --summary-line: #E3D6FF;
+    --toast-bg: rgba(255, 255, 255, 0.9);
+    --toast-bonus-bg: rgba(255, 255, 255, 0.9);
+    --toast-fg: #6B3FD1;
+    --toast-border: 3px solid #FFFFFF;
+    --ray: rgba(176, 108, 255, 0.16);
+    --title-grad: linear-gradient(90deg, #FF6FC4, #8A5CF5, #4FB8F5);
+    --medal: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E6D1FF 50%, #B39BFF 100%);
+    --medal-fg: #4A1FA8;
+    --ribbon-1: #FF9FD8;
+    --ribbon-2: #8EE6FF;
+    --bar-wheel: #FF6FC4;
+    --bar-bonus: #4FD2F5;
+    --bar-coin: #FFC24D;
+    background: linear-gradient(125deg, #FBD0F1, #D3E0FF, #C9F6EC, #FFF0C4, #E6D0FF, #FBD0F1);
+    background-size: 400% 400%;
+    animation: gradientShift 16s ease infinite;
+}
+
+/* ---------- Cat Café ---------- */
+body[data-theme="cat"] {
+    --font: "Fredoka", "Nunito", system-ui, sans-serif;
+    --font-display: var(--font);
+    --card-bg: #FFFFFF;
+    --card-border: 4px solid #FFB870;
+    --heading: #E07A1F;
+    --label: #1B7D73;
+    --muted: #6E9C97;
+    --select-border: #2EC4B6;
+    --select-hover: #FF9F43;
+    --select-bg: #F2FFFD;
+    --select-fg: #16655D;
+    --btn-primary: linear-gradient(135deg, #FFB060, #F07F1E);
+    --btn-finish: linear-gradient(135deg, #FFB060, #F07F1E);
+    --btn-gamble: linear-gradient(135deg, #FF8A7A, #F0552E);
+    --btn-safe: linear-gradient(135deg, #3ED3C3, #169C90);
+    --pill-bg: #FFFFFF;
+    --pill-fg: #E07A1F;
+    --pill-border: 3px solid #FFB870;
+    --hint: rgba(255, 255, 255, 0.9);
+    --hub-bg: radial-gradient(circle at 35% 28%, #FFD2A1 0%, #FF9F43 55%, #E57F1C 100%);
+    --hub-border: #FFFFFF;
+    --hub-fg: #FFFFFF;
+    --hub-shadow: 0 8px 18px -4px rgba(10, 80, 72, 0.6), inset 0 -5px 10px rgba(170, 80, 0, 0.3);
+    --ring: #FFE08A;
+    --gamble-card-bg: #FFF8F0;
+    --gamble-card-border: #FF9F43;
+    --safe-card-bg: #EFFFFC;
+    --safe-card-border: #2EC4B6;
+    --win: #16977F;
+    --lose: #F0552E;
+    --safe: #169C90;
+    --summary-fg: #4A6B67;
+    --summary-line: #CDEFEA;
+    --toast-bg: #FFFFFF;
+    --toast-bonus-bg: #FFFFFF;
+    --toast-fg: #E07A1F;
+    --toast-border: 3px solid #FFB870;
+    --ray: rgba(255, 255, 255, 0.2);
+    --title-grad: linear-gradient(90deg, #FF9F43, #FF6B6B);
+    --medal: radial-gradient(circle at 35% 30%, #FFE3B8 0%, #FF9F43 55%, #E57F1C 100%);
+    --medal-fg: #5A2A00;
+    --ribbon-1: #2EC4B6;
+    --ribbon-2: #FF6B6B;
+    --bar-wheel: #FF9F43;
+    --bar-bonus: #2EC4B6;
+    --bar-coin: #FF6B6B;
+    background:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'><g fill='white' fill-opacity='0.13' transform='rotate(-18 32 32)'><ellipse cx='32' cy='38' rx='8.5' ry='7'/><circle cx='21.5' cy='28' r='3.8'/><circle cx='28.5' cy='22.5' r='3.8'/><circle cx='35.5' cy='22.5' r='3.8'/><circle cx='42.5' cy='28' r='3.8'/></g></svg>"),
+        linear-gradient(180deg, #3ED3C3 0%, #17A294 100%);
+}
+
+body[data-theme="cat"] .spin-button-text {
+    text-shadow: 0 2px 0 rgba(170, 80, 0, 0.45);
+}
+
+/* Cat ears on the spin button */
+body[data-theme="cat"] .hub-ears {
+    display: block;
+    position: absolute;
+    left: -2%;
+    top: -30%;
+    width: 104%;
+    height: auto;
+    pointer-events: none;
+    overflow: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bubble,
+    .star,
+    .sparkle {
+        animation: none;
+    }
+
+    .bubble {
+        display: none;
+    }
+
+    body[data-theme="holo"] {
+        animation: none;
+    }
+}
