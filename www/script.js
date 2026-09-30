@@ -219,17 +219,7 @@ function drawWheel() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, size, size);
 
-    // Rim with drop shadow
-    ctx.save();
-    ctx.shadowColor = theme.shadow;
-    ctx.shadowBlur = 30;
-    ctx.shadowOffsetY = 10;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius + rimWidth, 0, Math.PI * 2);
-    ctx.fillStyle = theme.rim[0];
-    ctx.fill();
-    ctx.restore();
-
+    // Rim (the drop shadow is a CSS filter on the canvas so it is not clipped)
     const rimGradient = ctx.createLinearGradient(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
     theme.rim.forEach((color, i) => rimGradient.addColorStop(i / (theme.rim.length - 1), color));
     ctx.beginPath();
