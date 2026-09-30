@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Fredoka:wght@500;600;700&family=Righteous&display=swap">
-    <link rel="stylesheet" href="styles.css?ver=0005">
+    <link rel="stylesheet" href="styles.css?ver=0007">
     <link rel="stylesheet" href="themes.css?ver=0003">
 </head>
 
@@ -142,13 +142,25 @@
                 <button class="gamble-action-button" onclick="handleGamble()">Try your luck!</button>
             </div>
 
+            <div class="choice-or">or</div>
+
             <div class="choice choice-keep">
-                <img src="cat.png" alt="">
-                <div class="keep-text">
-                    <b>Keep <span id="keepTotalMinutes">0</span> min</b>
-                    <small>100% safe</small>
+                <div class="choice-title">Play it safe</div>
+                <div class="keep-tile">
+                    <img src="cat.png" alt="">
+                    <div class="keep-text">
+                        <b><span id="keepTotalMinutes">0</span> min</b>
+                        <small>100% yours, guaranteed</small>
+                    </div>
                 </div>
-                <button class="skip-gamble-button small-button" onclick="handleSafeGamble()">Keep</button>
+                <p class="keep-tip">Knowing when to stop is smart!</p>
+                <button class="skip-gamble-button" onclick="handleSafeGamble()">
+                    <svg class="shield-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z" fill="currentColor" opacity="0.9"/>
+                        <path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Keep my minutes
+                </button>
             </div>
         </div>
     </div>

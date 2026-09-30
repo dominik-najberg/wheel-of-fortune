@@ -57,11 +57,20 @@
 body {
     font-family: var(--font);
     background: linear-gradient(135deg, #1a3a52 0%, #0d1f2d 100%);
+    /* dvh = the height actually visible on phones, between the browser bars */
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    align-items: flex-start;
+    overflow-x: hidden;
+}
+
+/* Centered vertically when there is room; when a screen is taller than the phone,
+   it starts at the top and the page scrolls instead of cutting it off */
+.container,
+.wheel-screen {
+    margin-block: auto;
 }
 
 .container {
@@ -533,11 +542,40 @@ body {
     background: var(--btn-safe);
 }
 
-.skip-gamble-button.small-button {
-    width: auto;
+/* Soft shine that sweeps across the safe button now and then */
+.skip-gamble-button {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.skip-gamble-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.45) 50%, transparent 65%);
+    transform: translateX(-100%);
+    animation: buttonShine 4s ease-in-out 1s infinite;
+}
+
+@keyframes buttonShine {
+    0%,
+    60% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.shield-icon {
+    width: 1.2em;
+    height: 1.2em;
     flex: none;
-    padding: 10px 20px;
-    font-size: 1em;
 }
 
 .ghost-button {
@@ -566,7 +604,7 @@ body {
 
 .gamble-bank b {
     font-family: var(--font-display);
-    font-size: 3.4em;
+    font-size: 2.8em;
     color: var(--heading);
     font-variant-numeric: tabular-nums;
 }
@@ -576,7 +614,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 14px;
+    padding: 12px;
     border-radius: 18px;
 }
 
@@ -586,9 +624,6 @@ body {
 }
 
 .choice-keep {
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
     background: var(--safe-card-bg);
     border: 2px dashed var(--safe-card-border);
 }
@@ -635,30 +670,60 @@ body {
     background: color-mix(in srgb, var(--lose) 14%, transparent);
 }
 
-.choice-keep img {
-    width: 52px;
-    height: 52px;
+.choice-or {
+    margin: -6px 0;
+    font-family: var(--font-display);
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+}
+
+.keep-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--safe) 14%, transparent);
+}
+
+.keep-tile img {
+    width: 56px;
+    height: 56px;
     flex: none;
 }
 
 .keep-text {
-    flex: 1;
-    min-width: 0;
     display: flex;
     flex-direction: column;
-    line-height: 1.2;
+    text-align: left;
+    line-height: 1.15;
 }
 
 .keep-text b {
     font-family: var(--font-display);
-    font-size: 1.15em;
+    font-size: 1.4em;
     color: var(--safe);
 }
 
 .keep-text small {
     font-size: 0.8em;
     font-weight: bold;
-    color: var(--muted);
+    color: var(--safe);
+    opacity: 0.85;
+}
+
+.keep-tip {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--summary-fg);
+}
+
+.choice-keep .skip-gamble-button {
+    align-self: center;
 }
 
 /* Coin flip */
@@ -1201,6 +1266,41 @@ body {
     padding: 14px 10px;
 }
 
+/* Shorter phones: tighten the gamble screen so both choices fit */
+@media (max-height: 820px) {
+    .gamble-screen {
+        padding: 20px 16px;
+    }
+
+    .gamble-screen .screen-stack {
+        gap: 10px;
+    }
+
+    .gamble-kicker {
+        font-size: 1.5em;
+    }
+
+    .gamble-bank b {
+        font-size: 2.3em;
+    }
+
+    .choice {
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .choice .gamble-action-button,
+    .choice .skip-gamble-button {
+        padding: 12px 24px;
+        font-size: 1.1em;
+    }
+
+    .keep-tile img {
+        width: 46px;
+        height: 46px;
+    }
+}
+
 /* Screens slide in from the side */
 @keyframes screenIn {
     from {
@@ -1220,7 +1320,8 @@ body {
     .gamble-screen,
     .end-screen,
     .coin-toss,
-    .win-rays {
+    .win-rays,
+    .skip-gamble-button::after {
         animation: none;
     }
 
