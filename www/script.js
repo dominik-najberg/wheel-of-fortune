@@ -569,6 +569,13 @@ function showAnimatedMessage(text, isBonus = false) {
 function updateSpinCounter() {
     document.getElementById('spinCounter').textContent =
         `Spin ${Math.min(currentSpin + 1, totalSpins)} of ${totalSpins}`;
+
+    // Finishing early only makes sense once at least one spin has been played
+    const finishBtn = document.querySelector('.end-game-button');
+    if (finishBtn) {
+        finishBtn.disabled = currentSpin === 0;
+        finishBtn.title = currentSpin === 0 ? 'Spin the wheel first' : '';
+    }
 }
 
 function updateMinutesDisplay() {
