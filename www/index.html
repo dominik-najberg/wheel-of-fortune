@@ -5,17 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Spin & Win Minutes!</title>
-    <link rel="stylesheet" href="styles.css?ver=0001">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Fredoka:wght@500;600;700&family=Righteous&display=swap">
+    <link rel="stylesheet" href="styles.css?ver=0005">
+    <link rel="stylesheet" href="themes.css?ver=0003">
 </head>
 
-<body>
+<body data-theme="classic">
+    <!-- Theme decorations (bubbles, stars, sparkles) and confetti -->
+    <div id="themeFx" class="theme-fx" aria-hidden="true"></div>
+    <canvas id="confettiCanvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
     <!-- Setup Screen -->
     <div id="setupScreen" class="container setup-screen">
         <h1>🎡 Spin & Win! 🎡</h1>
 
-        <div class="dropdown-group">
-            <label for="numSpins">Number of Spins</label>
-            <select id="numSpins">
+        <div class="setup-group">
+            <span class="setup-label" id="numSpinsLabel">Number of Spins</span>
+            <div class="chip-picker" data-picker="chips" data-for="numSpins" role="group" aria-labelledby="numSpinsLabel"></div>
+            <select id="numSpins" hidden>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3" selected>3</option>
@@ -28,9 +37,10 @@
             </select>
         </div>
 
-        <div class="dropdown-group">
-            <label for="maxMinutes">Max Minutes</label>
-            <select id="maxMinutes">
+        <div class="setup-group">
+            <span class="setup-label" id="maxMinutesLabel">Max Minutes</span>
+            <div class="chip-picker" data-picker="chips" data-for="maxMinutes" role="group" aria-labelledby="maxMinutesLabel"></div>
+            <select id="maxMinutes" hidden>
                 <option value="15">15</option>
                 <option value="20">20</option>
                 <option value="25" selected>25</option>
@@ -43,9 +53,22 @@
             </select>
         </div>
 
-        <div class="dropdown-group">
-            <label for="backgroundSelect">Background</label>
-            <select id="backgroundSelect">
+        <div class="setup-group">
+            <span class="setup-label" id="themeLabel">Theme</span>
+            <div class="theme-picker" data-picker="themes" data-for="themeSelect" role="group" aria-labelledby="themeLabel"></div>
+            <select id="themeSelect" hidden>
+                <option value="classic">Classic</option>
+                <option value="candy">Candy Pop</option>
+                <option value="galaxy">Galaxy Night</option>
+                <option value="holo">Holo Dream</option>
+                <option value="cat">Cat Café</option>
+            </select>
+        </div>
+
+        <div class="setup-group" id="backgroundGroup">
+            <span class="setup-label" id="backgroundLabel">Background <span class="setup-value" id="backgroundName"></span></span>
+            <div class="swatch-picker" data-picker="swatches" data-for="backgroundSelect" role="group" aria-labelledby="backgroundLabel"></div>
+            <select id="backgroundSelect" hidden>
                 <option value="default">Default</option>
                 <option value="animated">Animated Gradient (Extra fun!) ✨</option>
                 <option value="bubblegum">Bubblegum Paradise 🎈</option>
@@ -67,8 +90,16 @@
         <div class="wheel-wrapper">
             <div class="wheel-container">
                 <canvas id="wheelCanvas"></canvas>
-                <div class="pointer"></div>
+                <div class="pointer" id="wheelPointer"></div>
                 <button id="spinButton" class="spin-button">
+                    <svg class="hub-ears" viewBox="0 0 100 40" aria-hidden="true">
+                        <path d="M10 44 18 4 44 30" fill="#FF9F43" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M90 44 82 4 56 30" fill="#FF9F43" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M18 30 21 14 33 26Z M82 30 79 14 67 26Z" fill="#FFB3C4"/>
+                    </svg>
+                    <svg class="power-ring" viewBox="0 0 100 100" aria-hidden="true">
+                        <circle id="powerRingFill" cx="50" cy="50" r="46" pathLength="100"/>
+                    </svg>
                     <span class="spin-button-text">GOOD<br>LUCK</span>
                     <div id="progressBar" class="progress-bar">
                         <div id="progressFill" class="progress-fill"></div>
@@ -94,99 +125,131 @@
 
     <!-- Gamble Screen -->
     <div id="gambleScreen" class="container gamble-screen" style="display: none;">
-
-        <div class="gamble-card">
-            <div class="gamble-outcomes">
-                <div class="outcome win">
-                    <span class="outcome-label" id="gambleWinLabel">Half More</span>
-                    <span class="outcome-value">+50%</span>
-                </div>
-                <div class="outcome-vs">VS</div>
-                <div class="outcome lose">
-                    <span class="outcome-label">10 min only</span>
-                    <span class="outcome-value">Risk</span>
-                </div>
+        <div class="screen-stack">
+            <div class="gamble-kicker">Decision time!</div>
+            <div class="gamble-bank">
+                <span class="mini-label">You won</span>
+                <b id="gambleBank">0</b>
+                <span class="mini-label">minutes</span>
             </div>
-            <button class="gamble-action-button" onclick="handleGamble()">TRY YOUR LUCK!</button>
-        </div>
 
-        <div class="gamble-card safe-card">
-            <div class="gamble-outcomes">
-                <div class="outcome safe">
-                    <span class="outcome-label">No risk. You keep all:</span>
-                    <span class="outcome-value"><span id="keepTotalMinutes">0</span> min</span>
+            <div class="choice choice-risk">
+                <div class="choice-title">Flip the lucky coin</div>
+                <div class="odds">
+                    <div class="odd odd-win"><b><span id="gambleWinTotal">0</span> min</b><small>★ heads</small></div>
+                    <div class="odd odd-lose"><b>10 min</b><small>✕ tails</small></div>
                 </div>
+                <button class="gamble-action-button" onclick="handleGamble()">Try your luck!</button>
             </div>
-            <button class="skip-gamble-button" onclick="handleSafeGamble()">🛡️ Keep My Time!</button>
+
+            <div class="choice choice-keep">
+                <img src="cat.png" alt="">
+                <div class="keep-text">
+                    <b>Keep <span id="keepTotalMinutes">0</span> min</b>
+                    <small>100% safe</small>
+                </div>
+                <button class="skip-gamble-button small-button" onclick="handleSafeGamble()">Keep</button>
+            </div>
         </div>
     </div>
 
     <!-- Gamble Result Screen -->
     <div id="gambleResultScreen" class="container gamble-screen" style="display: none;">
         <!-- Win Panel -->
-        <div id="gambleWinPanel" class="gamble-card" style="display: none;">
-            <div class="celebration"><span>🎉</span><span>🎊</span><span>🎉</span></div>
-            <h2 class="win-message" style="margin-bottom: 5px;">BIG WIN!</h2>
-            <div class="gamble-outcomes">
-                <div class="outcome win" style="margin-top: 15px;">
-                    <span class="outcome-value" id="gambleWinAmount">+0 min</span>
-                    <span class="outcome-label">Extra Time Added!</span>
+        <div id="gambleWinPanel" class="result-panel" style="display: none;">
+            <div class="screen-stack">
+                <h2 class="big-title">BIG WIN!</h2>
+                <div class="count-up">
+                    <b id="gambleWinCount">0</b>
+                    <span class="mini-label">minutes</span>
                 </div>
+                <div class="delta-chip" id="gambleWinAmount">+0 min from the coin</div>
+                <button class="primary-button" onclick="continueFromGamble()">Awesome! Let's go!</button>
             </div>
-            <button class="gamble-action-button" onclick="continueFromGamble()">Awesome! Let's Go!</button>
         </div>
 
         <!-- Lose Panel -->
-        <div id="gambleLosePanel" class="gamble-card" style="display: none;">
-            <div class="celebration" style="font-size: 4em;"><span>💥</span></div>
-            <h2 class="win-message" style="color: #E74C3C; margin-bottom: 5px;">Ouch!</h2>
-            <div class="gamble-outcomes">
-                <div class="outcome lose" style="margin-top: 15px;">
-                    <span class="outcome-label">Only 10 minutes left</span>
+        <div id="gambleLosePanel" class="result-panel" style="display: none;">
+            <div class="screen-stack">
+                <h2 class="ouch">Ouch!</h2>
+                <div class="swap">
+                    <span class="swap-old" id="loseOldMinutes">0</span>
+                    <span class="swap-arrow">→</span>
+                    <span class="swap-new">10</span>
                 </div>
+                <p class="comfort">The coin landed on ✕ this time.<br>10 minutes are still yours!</p>
+                <button class="ghost-button" onclick="continueFromGamble()">OK, next time!</button>
             </div>
-            <button class="skip-gamble-button" onclick="continueFromGamble()">Accept my fate</button>
         </div>
 
         <!-- Safe Panel -->
-        <div id="gambleSafePanel" class="gamble-card" style="display: none;">
-            <div><img src="cat.png" alt="Happy Cat Badge" style="max-width: 150px; margin-bottom: 20px;"></div>
-            <div class="gamble-outcomes">
-                <div class="outcome safe" style="margin-top: 15px;">
-                    <span class="outcome-label">Time secured:</span>
-                    <span class="outcome-value" style="color: #2980b9;"><span id="safePanelMinutes">0</span> min</span>
+        <div id="gambleSafePanel" class="result-panel" style="display: none;">
+            <div class="screen-stack">
+                <div class="badge-wrap">
+                    <div class="badge"><img src="cat.png" alt="Safe Choice cat badge"></div>
+                    <span class="stamp">SAFE!</span>
                 </div>
+                <div class="secured">
+                    <span class="mini-label">Time secured</span>
+                    <b><span id="safePanelMinutes">0</span> min</b>
+                </div>
+                <p class="comfort">Smart move. No coin, no risk.</p>
+                <button class="skip-gamble-button" onclick="continueFromGamble()">Continue</button>
             </div>
-            <button class="skip-gamble-button" onclick="continueFromGamble()">Continue!</button>
         </div>
     </div>
 
     <!-- End Screen -->
     <div id="endScreen" class="container end-screen">
-        <div class="celebration"><span>🎉</span><span>🎊</span><span>🎉</span></div>
-        <h2 class="win-message" id="winMessage">Winning!</h2>
-        <div class="summary-breakdown">
-            <div class="summary-item">
-                <span class="summary-label">Regular Minutes:</span>
-                <span class="summary-value" id="summaryRegular">0</span>
+        <div class="screen-stack">
+            <div class="medal-wrap">
+                <span class="ribbon ribbon-left"></span>
+                <span class="ribbon ribbon-right"></span>
+                <div class="medal">
+                    <b id="summaryTotal">0</b>
+                    <small>minutes</small>
+                </div>
             </div>
-            <div class="summary-item">
-                <span class="summary-label">Plus Fives:</span>
-                <span class="summary-value" id="summaryPlusFives">0</span>
+
+            <div class="end-block" id="spinHistoryBlock">
+                <span class="mini-label">Your spins</span>
+                <div class="spin-history" id="spinHistory"></div>
             </div>
-            <div class="summary-item" id="luckyMinutesItem">
-                <span class="summary-label" id="summaryLuckyLabel">Lucky Minutes:</span>
-                <span class="summary-value" id="summaryLucky">0</span>
+
+            <div class="end-block">
+                <div class="minutes-bar">
+                    <i class="seg-wheel" id="barWheel"></i>
+                    <i class="seg-bonus" id="barBonus"></i>
+                    <i class="seg-coin" id="barCoin"></i>
+                    <i class="seg-lost" id="barLost"></i>
+                </div>
+                <div class="summary-legend">
+                    <span class="dot dot-wheel"></span><span>Wheel</span><b id="summaryRegular">0</b>
+                    <span class="dot dot-bonus"></span><span>+5 bonuses</span><b id="summaryPlusFives">0</b>
+                    <span class="dot dot-coin" id="summaryLuckyDot"></span><span id="summaryLuckyLabel">Lucky coin</span><b id="summaryLucky">0</b>
+                </div>
             </div>
-            <div class="summary-total">
-                <span class="summary-label">Total Minutes:</span>
-                <span class="summary-value" id="summaryTotal">0</span>
+
+            <div class="end-buttons">
+                <button class="primary-button" onclick="playAgain()">Play again</button>
+                <button class="ghost-button" onclick="resetGame()">Settings</button>
             </div>
         </div>
-        <button class="new-spin-button" onclick="resetGame()">New Spin</button>
     </div>
 
-    <script src="script.js?ver=0002"></script>
+    <!-- Coin flip and win rays live outside the cards so they can cover the whole screen -->
+    <div id="winRays" class="win-rays" aria-hidden="true" hidden></div>
+    <div id="coinStage" class="coin-stage" hidden>
+        <div class="coin-toss" id="coinToss">
+            <div class="coin" id="coin">
+                <div class="coin-face coin-front">★<small><span id="coinWinLabel">0</span> MIN</small></div>
+                <div class="coin-face coin-back">✕<small>10 MIN</small></div>
+            </div>
+        </div>
+        <div class="coin-label" id="coinLabel" aria-live="polite"></div>
+    </div>
+
+    <script src="script.js?ver=0005"></script>
 </body>
 
 </html>
