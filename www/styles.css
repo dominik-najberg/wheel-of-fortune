@@ -446,8 +446,14 @@ body {
     transition: transform 0.2s;
 }
 
-.end-game-button:hover {
+.end-game-button:hover:not(:disabled) {
     transform: scale(1.1);
+}
+
+.end-game-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 /* Gamble, result and end screens */
